@@ -1,5 +1,5 @@
-import { detectType } from "../servives/detector.service.js";
-import { scrapeContent } from "../servives/scraper.service.js";
+import { scrapeContent } from "../services/scraper.service.js";
+import { detectType } from "../services/detector.service.js";
 import saveModel from "../models/saves.model.js";
 import { getTimeAgo } from "../utils/util.js";
 
@@ -112,7 +112,7 @@ export async function deleteSave(req, res) {
 
 export async function getSaves(req, res) {
   try {
-    const saves = await saveModel.find().sort({ createdAt: -1 }); 
+    const saves = await saveModel.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
