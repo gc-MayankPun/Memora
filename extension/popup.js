@@ -1,5 +1,5 @@
 const APP_URL = "http://localhost:5173";
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:3000";
 
 // ── Screen helpers ──
 function showScreen(name) {
@@ -29,7 +29,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
   // Check if this URL is already saved
   try {
     const res = await fetch(
-      `${API_URL}/api/items/exists?url=${encodeURIComponent(url)}`,
+      `${API_URL}/api/saves/exists?url=${encodeURIComponent(url)}`,
     );
     const data = await res.json();
 
@@ -38,19 +38,19 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       d.textContent = `You saved this ${data.savedAgo || "before"}`;
 
       document.getElementById("view-existing-btn").href =
-        `${APP_URL}/item/${data.id}`;
+        `${APP_URL}/saves/${data.id}`;
       document
         .getElementById("view-existing-btn")
         .addEventListener("click", (e) => {
           e.preventDefault();
-          chrome.tabs.create({ url: `${APP_URL}/item/${data.id}` });
+          chrome.tabs.create({ url: `${APP_URL}/saves/${data.id}` });
         });
 
       showScreen("exists");
       return;
     }
   } catch (err) {
-    // backend not running yet — just show the save form
+    // backend not running yet, just show the save form
   }
 
   showScreen("save");
@@ -74,7 +74,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   btn.textContent = "Saving...";
 
   try {
-    const res = await fetch(`${API_URL}/api/items`, {
+    const res = await fetch(`${API_URL}/api/saves`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, url, note, tags }),
@@ -83,18 +83,18 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     const data = await res.json();
 
     // Show auto-generated tags if backend returns them
-    if (data.autoTags && data.autoTags.length > 0) {
+    if (data.save?.tags && data.save.tags.length > 0) {
       document.getElementById("auto-tags-text").textContent =
-        `Auto-tagged: ${data.autoTags.join(", ")}`;
+        `Tags: ${data.save.tags.join(", ")}`;
     }
 
     // Wire up "View in Memora" button
-    if (data.id) {
+    if (data.save?._id) {
       const viewBtn = document.getElementById("view-item-btn");
-      viewBtn.href = `${APP_URL}/item/${data.id}`;
+      viewBtn.href = `${APP_URL}/saves/${data.id}`;
       viewBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        chrome.tabs.create({ url: `${APP_URL}/item/${data.id}` });
+        chrome.tabs.create({ url: `${APP_URL}/saves/${data.save._id}` });
       });
     }
 
