@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memora</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- SCREEN 1: Default save view -->
+    <div id="screen-save">
+      <div class="header">
+        <span class="logo">Memora</span>
+        <a id="open-app" href="#" title="Open Memora">↗</a>
+      </div>
+
+      <div class="form">
+        <label>Page title</label>
+        <input type="text" id="page-title" placeholder="Auto-filled..." />
+
+        <label>URL</label>
+        <input
+          type="text"
+          id="page-url"
+          placeholder="Auto-filled..."
+          readonly
+        />
+
+        <label>Note <span class="optional">(optional)</span></label>
+        <textarea
+          id="note"
+          rows="3"
+          placeholder="Why are you saving this?"
+        ></textarea>
+
+        <label>Tags <span class="optional">(optional)</span></label>
+        <input type="text" id="tags" placeholder="e.g. design, research" />
+
+        <div id="error-msg" class="error-msg hidden">
+          Could not connect to Memora. Is your backend running?
+        </div>
+
+        <button id="save-btn">Save to Memora</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Success view -->
+    <div id="screen-saved" class="hidden">
+      <div class="header">
+        <span class="logo">Memora</span>
+        <a id="open-app-2" href="#" title="Open Memora">↗</a>
+      </div>
+
+      <div class="center-content">
+        <div class="success-badge">Saved!</div>
+        <p id="auto-tags-text" class="muted"></p>
+        <a id="view-item-btn" href="#" class="secondary-btn"
+          >View in Memora ↗</a
+        >
+      </div>
+    </div>
+
+    <!-- SCREEN 3: Already saved view -->
+    <div id="screen-exists" class="hidden">
+      <div class="header">
+        <span class="logo">Memora</span>
+        <a id="open-app-3" href="#" title="Open Memora">↗</a>
+      </div>
+
+      <div class="center-content">
+        <p class="muted" id="saved-ago-text">You saved this before</p>
+        <a id="view-existing-btn" href="#" class="secondary-btn"
+          >View saved item ↗</a
+        >
+        <button id="save-anyway-btn" class="ghost-btn">
+          Save again anyway
+        </button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

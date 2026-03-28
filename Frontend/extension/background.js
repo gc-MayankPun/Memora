@@ -1,0 +1,1 @@
+// background service worker — will handle auth token and badge logic

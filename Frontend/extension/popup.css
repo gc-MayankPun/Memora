@@ -1,0 +1,194 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 320px;
+  min-height: 200px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 0.5px solid #e5e5e5;
+  background: #f9f9f9;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #1a1a1a;
+}
+
+.header a {
+  font-size: 13px;
+  color: #888;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 0.5px solid #e0e0e0;
+  transition: background 0.15s;
+}
+
+.header a:hover {
+  background: #f0f0f0;
+}
+
+/* ── Form ── */
+.form {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: -4px;
+}
+
+.optional {
+  font-weight: 400;
+  text-transform: none;
+  color: #bbb;
+  letter-spacing: 0;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #f7f7f7;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 6px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #aaa;
+  background: #fff;
+}
+
+input[readonly] {
+  color: #999;
+  cursor: default;
+}
+
+/* ── Save button ── */
+button#save-btn {
+  width: 100%;
+  padding: 9px;
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #fff;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+button#save-btn:hover {
+  background: #333;
+}
+
+button#save-btn:active {
+  transform: scale(0.98);
+}
+
+button#save-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+/* ── Centered screens (success / exists) ── */
+.center-content {
+  padding: 28px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.success-badge {
+  padding: 6px 20px;
+  background: #e6f4ea;
+  color: #2d7a3a;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.muted {
+  font-size: 12px;
+  color: #888;
+}
+
+.secondary-btn {
+  font-size: 12px;
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 7px 16px;
+  border: 0.5px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f7f7f7;
+  transition: background 0.15s;
+}
+
+.secondary-btn:hover {
+  background: #efefef;
+}
+
+.ghost-btn {
+  font-size: 12px;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.ghost-btn:hover {
+  color: #444;
+}
+
+/* ── Utility ── */
+.hidden {
+  display: none !important;
+}
+
+.error-msg {
+  font-size: 12px;
+  color: #c0392b;
+  background: #fdf0ee;
+  border: 0.5px solid #f5c6c2;
+  border-radius: 6px;
+  padding: 8px 10px;
+  text-align: center;
+}

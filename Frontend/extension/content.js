@@ -1,0 +1,1 @@
+// content script — will detect if current page is already saved
