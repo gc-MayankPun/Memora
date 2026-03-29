@@ -9,7 +9,7 @@ export const fetchSave = async (id) => {
   const response = await api.get(`/api/saves/${id}`);
   return response.data;
 };
- 
+
 export const checkSaveExists = async (url) => {
   const response = await api.get(
     `/api/saves/exists?url=${encodeURIComponent(url)}`,
@@ -29,5 +29,10 @@ export const updateSave = async (id, payload) => {
 
 export const updateTags = async (id, tags) => {
   const response = await api.patch(`/api/saves/${id}/update-tags`, { tags });
+  return response.data;
+};
+
+export const updateNote = async (id, note) => {
+  const response = await api.patch(`/api/saves/${id}/update-note`, { note });
   return response.data;
 };

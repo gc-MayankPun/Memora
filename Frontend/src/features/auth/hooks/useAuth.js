@@ -16,7 +16,7 @@ export const useAuth = () => {
     setLoading(true);
     try {
       const data = await register({ email, username, password });
-      toast.success(data.message); 
+      toast.success(data.message);
       localStorage.setItem("pendingEmail", email);
 
       return data;

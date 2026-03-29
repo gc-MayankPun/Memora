@@ -298,3 +298,37 @@ export async function updateTags(req, res) {
     });
   }
 }
+
+export async function updateNote(req, res) {
+  const { note } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const saveDoc = await saveModel.findOne({
+      _id: req.params.id,
+      userId,
+    });
+
+    if (!saveDoc) {
+      return res.status(404).json({
+        success: false,
+        message: "Save not found",
+      });
+    }
+
+    saveDoc.note = note ?? "";
+    await saveDoc.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Note updated successfully",
+      save: saveDoc,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update note. Please try again",
+      error: err.message,
+    });
+  }
+}

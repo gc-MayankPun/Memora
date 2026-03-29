@@ -2,6 +2,7 @@ import { useContext } from "react";
 import {
   deleteSave,
   fetchSave,
+  updateNote,
   updateSave,
   updateTags,
 } from "../services/saves.api";
@@ -58,11 +59,25 @@ export const useSaves = () => {
     }
   }
 
+  async function handleUpdateNote(id, note) {
+    setLoading(true);
+    try {
+      const data = await updateNote(id, { note });
+      setSave((prev) => ({ ...prev, note: data.save.note }));
+      toast.success("Note updated");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     handleFetchSave,
     handleDeleteSave,
     handleToggleFavorite,
     handleUpdateTags,
+    handleUpdateNote,
     loading,
     save,
   };

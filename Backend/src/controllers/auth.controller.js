@@ -99,9 +99,7 @@ export async function logout(req, res) {}
 export async function deleteUser(req, res) {}
 
 export async function getMe(req, res) {
-  const userId = req.params.id;
-
-  const user = await userModel.findById(userId);
+  const user = await userModel.findById(req.user.id);
   if (!user) {
     return res.status(404).json({
       success: false,

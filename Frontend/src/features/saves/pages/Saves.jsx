@@ -15,6 +15,7 @@ export default function Saves() {
     handleDeleteSave,
     handleToggleFavorite,
     handleUpdateTags,
+    handleUpdateNote
   } = useSaves();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function Saves() {
       <SaveContent
         save={save}
         onUpdateTags={(tags) => handleUpdateTags(id, tags)}
+        onUpdateNote={(note) => handleUpdateNote(id, note)} 
       />
     </div>
   );

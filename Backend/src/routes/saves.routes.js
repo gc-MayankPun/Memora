@@ -8,6 +8,7 @@ import {
   updateFavorite,
   deleteSave,
   updateTags,
+  updateNote
 } from "../controllers/saves.controller.js";
 import { authUser } from "../middlewares/auth.middleware.js";
 
@@ -18,6 +19,7 @@ savesRouter.patch("/update", authUser, updateSave);
 savesRouter.get("/", authUser, getSaves);
 savesRouter.patch("/:id/update-favorite", authUser, updateFavorite);
 savesRouter.patch("/:id/update-tags", authUser, updateTags);
+savesRouter.patch("/:id/update-note", authUser, updateNote);
 savesRouter.get("/exists", authUser, checkSave);
 savesRouter.get("/:id", authUser, getSave);
 savesRouter.delete("/:id/delete", authUser, deleteSave);

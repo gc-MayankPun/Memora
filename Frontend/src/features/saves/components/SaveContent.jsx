@@ -2,13 +2,17 @@ import { useState } from "react";
 import { HiSparkles } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
+import { PiNotePencilLight } from "react-icons/pi";
 import "../styles/save-content.scss";
 
-export default function SaveContent({ save, onUpdateTags }) {
+export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
   const [tags, setTags] = useState(save.tags || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputVal, setInputVal] = useState("");
   const [tagsDirty, setTagsDirty] = useState(false);
+
+  const [note, setNote] = useState(save.note || "");
+  const [editingNote, setEditingNote] = useState(false);
 
   const addTag = () => {
     const trimmed = inputVal.trim().toLowerCase().replace(/\s+/g, "-");
@@ -40,6 +44,15 @@ export default function SaveContent({ save, onUpdateTags }) {
     }
   };
 
+  const saveNote = () => {
+    setEditingNote(false);
+    if (note !== save.note) onUpdateNote(note);
+  };
+
+  const handleNoteKeyDown = (e) => {
+    if (e.key === "Escape") saveNote();
+  };
+
   return (
     <div className="save-content">
       {/* AI Summary */}
@@ -49,6 +62,34 @@ export default function SaveContent({ save, onUpdateTags }) {
           AI Summary
         </div>
         <p className="save-content__summary">{save.summary}</p>
+      </section>
+
+      {/* Your Note */}
+      <section className="save-content__section">
+        <div className="save-content__section-label">
+          <PiNotePencilLight className="save-content__note-icon" />
+          Your Note
+        </div>
+
+        {editingNote ? (
+          <textarea
+            autoFocus
+            className="save-content__note-input"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            onBlur={saveNote}
+            onKeyDown={handleNoteKeyDown}
+            placeholder="Why did you save this? What stood out?"
+            rows={3}
+          />
+        ) : (
+          <div
+            className={`save-content__note ${!note ? "save-content__note--empty" : ""}`}
+            onClick={() => setEditingNote(true)}
+          >
+            {note || "Add a personal note..."}
+          </div>
+        )}
       </section>
 
       {/* AI Topics */}
@@ -76,7 +117,6 @@ export default function SaveContent({ save, onUpdateTags }) {
             </button>
           )}
         </div>
-
         <div className="save-content__tags">
           {tags.map((tag) => (
             <span key={tag} className="save-content__tag">
@@ -90,7 +130,6 @@ export default function SaveContent({ save, onUpdateTags }) {
               </button>
             </span>
           ))}
-
           {inputVisible ? (
             <input
               autoFocus
