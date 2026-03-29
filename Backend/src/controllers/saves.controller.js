@@ -152,3 +152,64 @@ export async function getSave(req, res) {
     });
   }
 }
+
+export async function updateSave(req, res) {
+  const { isFavorite } = req.body; 
+
+  try {
+    const save = await saveModel.findById(req.params.id);
+    if (!save) {
+      return res.status(404).json({
+        success: false,
+        message: "Save not found",
+      });
+    }
+
+    if (isFavorite !== undefined) {
+      save.isFavorite = isFavorite;
+    }
+
+    const updatedSave = await save.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Save updated successfully",
+      save: updatedSave,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update save. Please try again",
+      error: err.message,
+    });
+  }
+}
+
+export async function updateTags(req, res) {
+  const { tags } = req.body;
+
+  try {
+    const save = await saveModel.findById(req.params.id);
+    if (!save) {
+      return res.status(404).json({
+        success: false,
+        message: "Save not found",
+      });
+    }
+
+    save.tags = tags || [];
+    const updatedSave = await save.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Tags updated successfully",
+      save: updatedSave,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update tags. Please try again",
+      error: err.message,
+    });
+  }
+}

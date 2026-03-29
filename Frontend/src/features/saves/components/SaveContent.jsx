@@ -37,7 +37,7 @@ export default function SaveContent({ save, onUpdateTags }) {
     setTagsDirty(true);
   };
 
-  const saveTags = () => {
+  const saveTags = async () => {
     onUpdateTags(tags);
     setTagsDirty(false);
   };
