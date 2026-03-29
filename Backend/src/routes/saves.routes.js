@@ -1,10 +1,11 @@
 import { Router } from "express";
 import {
   createSave,
+  updateSave,
   getSaves,
   getSave,
   checkSave,
-  updateSave,
+  updateFavorite,
   deleteSave,
   updateTags,
 } from "../controllers/saves.controller.js"; 
@@ -12,8 +13,9 @@ import {
 const savesRouter = Router();
 
 savesRouter.post("/", createSave);
+savesRouter.patch("/update", updateSave);
 savesRouter.get("/", getSaves);
-savesRouter.patch("/:id/update-favorite", updateSave);
+savesRouter.patch("/:id/update-favorite", updateFavorite);
 savesRouter.patch("/:id/update-tags", updateTags);
 savesRouter.get("/exists", checkSave);
 savesRouter.get("/:id", getSave);

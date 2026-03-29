@@ -64,6 +64,69 @@ export async function createSave(req, res) {
   }
 }
 
+export async function updateSave(req, res) {
+  try {
+    const { title, url, note, tags } = req.body;
+
+    if (!title || !url) {
+      return res.status(400).json({
+        success: false,
+        message: "Title and URL are required",
+      });
+    }
+
+    const type = detectType(url);
+    const { content, thumbnail, favicon, keywords } = await scrapeMetatags(url);
+    const { summary, topics, aiTags } = await generateSummaryAndTopics({
+      title,
+      content,
+      keywords,
+      url,
+    });
+
+    const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
+
+    const updatedTags = Array.from(
+      new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
+    );
+
+    const save = await saveModel.findOneAndUpdate(
+      { url },
+      {
+        title,
+        url,
+        note,
+        tags: updatedTags,
+        type,
+        summary: summary || content,
+        thumbnail,
+        favicon,
+        topics,
+      },
+      { new: true },
+    );
+
+    if (!save) {
+      return res.status(404).json({
+        success: false,
+        message: "Save not found for the provided URL",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Save updated successfully",
+      save,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to update save. Please try again",
+      error: err.message,
+    });
+  }
+}
+
 export async function checkSave(req, res) {
   try {
     const { url } = req.query;
@@ -168,7 +231,7 @@ export async function getSave(req, res) {
   }
 }
 
-export async function updateSave(req, res) {
+export async function updateFavorite(req, res) {
   const { isFavorite } = req.body;
 
   try {

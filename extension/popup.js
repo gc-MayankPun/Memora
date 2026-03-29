@@ -1,5 +1,6 @@
 const APP_URL = "http://localhost:5173";
 const API_URL = "http://localhost:3000";
+let update = false;
 
 // ── Screen helpers ──
 function showScreen(name) {
@@ -74,11 +75,20 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   btn.textContent = "Saving...";
 
   try {
-    const res = await fetch(`${API_URL}/api/saves`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, url, note, tags }),
-    });
+    let res;
+    if (!update) {
+      res = await fetch(`${API_URL}/api/saves`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, url, note, tags }),
+      });
+    } else {
+      res = await fetch(`${API_URL}/api/saves/update`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, url, note, tags }),
+      });
+    }
 
     const data = await res.json();
 
@@ -110,6 +120,7 @@ document.getElementById("save-btn").addEventListener("click", async () => {
 // ── "Save again anyway" button ──
 document.getElementById("save-anyway-btn").addEventListener("click", () => {
   showScreen("save");
+  update = true;
 });
 
 document.getElementById("page-url").addEventListener("input", () => {
