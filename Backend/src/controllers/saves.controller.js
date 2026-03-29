@@ -1,4 +1,4 @@
-import { scrapeContent } from "../services/scraper.service.js";
+import { scrapeMetatags } from "../services/scraper.service.js";
 import { detectType } from "../services/detector.service.js";
 import saveModel from "../models/saves.model.js";
 import { getTimeAgo } from "../utils/util.js";
@@ -23,7 +23,7 @@ export async function createSave(req, res) {
     }
 
     const type = detectType(url);
-    const { content, thumbnail } = await scrapeContent(url);
+    const { content, thumbnail } = await scrapeMetatags(url);
 
     const save = await saveModel.create({
       title,

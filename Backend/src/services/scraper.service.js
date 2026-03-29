@@ -1,31 +1,50 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
+import nodeFetch from "node-fetch";
 
-export async function scrapeContent(url) {
+export const scrapeMetatags = async (url) => {
   try {
-    const { data } = await axios.get(url, {
-      timeout: 8000,
+    const response = await nodeFetch(url, {
       headers: {
-        // pretend to be a real browser — some sites block bots
-        "User-Agent": "Mozilla/5.0 (compatible; Memora/1.0)",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        Accept: "text/html,application/xhtml+xml",
       },
     });
 
-    const $ = cheerio.load(data);
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
-    // get thumbnail from og:image meta tag
-    const thumbnail =
-      $('meta[property="og:image"]').attr("content") || "";
+    const getMetatag = (name) =>
+      $(`meta[name="${name}"]`).attr("content") ||
+      $(`meta[property="og:${name}"]`).attr("content") ||
+      $(`meta[name="twitter:${name}"]`).attr("content") ||
+      "";
 
-    // get readable text — remove scripts, styles, navs
-    $("script, style, nav, footer, header").remove();
-    const content = $("body").text().replace(/\s+/g, " ").trim();
+    const toAbsoluteUrl = (base, relative) => {
+      try {
+        return new URL(relative, base).href;
+      } catch {
+        return relative || "";
+      }
+    };
 
-    return { thumbnail, content };
+    const thumbnailRaw = getMetatag("image");
 
+    return {
+      url,
+      title: $("title").text() || "",
+      thumbnail: toAbsoluteUrl(url, thumbnailRaw),
+      content: getMetatag("description"),
+      author: getMetatag("author"),
+      keywords: getMetatag("keywords"),
+    };
   } catch (err) {
-    // if scraping fails, don't crash the whole save
-    // just return empty strings
-    return { thumbnail: "", content: "" };
+    return {
+      url,
+      title: "",
+      thumbnail: "",
+      content: "",
+      author: "",
+      keywords: "",
+    };
   }
-}
+};
