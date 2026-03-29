@@ -68,13 +68,7 @@ export default function SaveCard({ save, index = 0 }) {
             src={thumbnail}
             alt={title}
             onError={(e) => {
-              e.target.src = favicon;
-
-              // e.target.style.display = "none";
-              // const placeholder = e.target
-              //   .closest(".save-card__thumbnail")
-              //   .querySelector(".save-card__placeholder");
-              // if (placeholder) placeholder.style.display = "flex";
+              e.target.src = favicon; 
             }}
           />
         )}

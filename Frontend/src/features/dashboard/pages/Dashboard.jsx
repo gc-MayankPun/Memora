@@ -17,7 +17,9 @@ export default function Dashboard() {
   const filteredByType =
     activeFilter === "All"
       ? saves
-      : saves.filter((s) => s.type === activeFilter.toLowerCase());
+      : activeFilter === "Favorites"
+        ? saves.filter((s) => s.isFavorite)
+        : saves.filter((s) => s.type === activeFilter.toLowerCase());
 
   const filteredSaves = searchQuery
     ? filteredByType.filter(
@@ -60,11 +62,7 @@ export default function Dashboard() {
       ) : (
         <div className="dashboard__grid">
           {filteredSaves.map((save, index) => (
-            <SaveCard
-              key={save._id}
-              save={save}
-              index={index} 
-            />
+            <SaveCard key={save._id} save={save} index={index} />
           ))}
         </div>
       )}

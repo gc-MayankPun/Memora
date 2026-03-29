@@ -8,6 +8,7 @@ const FILTERS = [
   "PDF",
   "GitHub",
   "Reddit",
+  "Favorites"
 ];
 
 export default function FilterBar({ active, onFilter }) {
