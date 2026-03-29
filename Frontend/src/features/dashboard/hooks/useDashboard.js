@@ -1,0 +1,26 @@
+import { useContext } from "react";
+import { fetchAllSaves } from "../services/dashboard.api";
+import { DashboardContext } from "../dashboard.context";
+import { toast } from "react-toastify";
+
+export const useDashboard = () => {
+  const context = useContext(DashboardContext);
+  console.log(context);
+  const { setLoading, loading, setSaves, saves } = context;
+
+  async function handleFetchAllSaves() {
+    setLoading(true);
+    try {
+      const data = await fetchAllSaves();
+      setSaves(data.saves);
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { handleFetchAllSaves, loading, saves };
+};

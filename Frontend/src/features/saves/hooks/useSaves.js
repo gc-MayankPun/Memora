@@ -1,0 +1,69 @@
+import { useContext } from "react";
+import {
+  deleteSave,
+  fetchSave,
+  updateSave,
+  updateTags,
+} from "../services/saves.api";
+import { SaveContext } from "../saves.context";
+import { toast } from "react-toastify";
+
+export const useSaves = () => {
+  const context = useContext(SaveContext);
+  const { setLoading, loading, setSave, save } = context;
+
+  async function handleFetchSave(id) {
+    setLoading(true);
+
+    try {
+      const data = await fetchSave(id);
+      setSave(data.save);
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDeleteSave(id) {
+    setLoading(true);
+    try {
+      const data = await deleteSave(id);
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleToggleFavorite(id, currentValue) {
+    try {
+      const data = await updateSave(id, { isFavorite: !currentValue });
+      setSave((prev) => ({ ...prev, isFavorite: data.save.isFavorite }));
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  }
+
+  async function handleUpdateTags(id, tags) {
+    try {
+      const data = await updateTags(id, tags);
+      setSave((prev) => ({ ...prev, tags: data.save.tags }));
+      toast.success("Tags updated");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  }
+
+  return {
+    handleFetchSave,
+    handleDeleteSave,
+    handleToggleFavorite,
+    handleUpdateTags,
+    loading,
+    save,
+  };
+};

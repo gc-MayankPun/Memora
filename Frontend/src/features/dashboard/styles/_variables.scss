@@ -1,0 +1,114 @@
+// ── Fonts ── 
+$font-display: poppins, 'Helvetica Neue', sans-serif;
+$font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
+$font-mono:    'DM Mono', 'Courier New', monospace;
+
+// ── Light theme ──
+[data-theme="light"] {
+  --bg-base:        #faf9f7;
+  --bg-surface:     #ffffff;
+  --bg-card:        #ffffff;
+  --bg-input:       #f3f2ef;
+  --bg-glass:       rgba(255, 255, 255, 0.72);
+
+  --border:         #e8e5e0;
+  --border-hover:   #c8c3bb;
+  --border-grid:    transparent;
+
+  --text-primary:   #1a1815;
+  --text-secondary: #6b6560; 
+  --text-muted:     #353433;
+  --text-logo:      #1a1815;
+
+  --nav-bg:         rgba(250, 249, 247, 0.88);
+  --thumb-overlay:  rgba(255, 255, 255, 0.1);
+  --card-hover:     #f7f6f3;
+  --card-shadow:    0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.05);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.10);
+
+  --tag-bg:         #f0ede8;
+  --tag-border:     #e4e0da;
+  --tag-color:      #7a756e;
+
+  --filter-active:  #1a1815; 
+  --filter-muted:   #949494;
+  --filter-pill-bg: #1a1815;
+  --filter-pill-color: #ffffff;
+
+  --fav-active:     #c9924a;
+  --meta-border:    #f0ede8;
+ 
+  --accent:         #003cb4;
+  --accent-soft:    #f5ebe0;
+
+  --badge-article-bg:   #eef2ff; --badge-article-color: #4a67d6;
+  --badge-tweet-bg:     #e8f7ef; --badge-tweet-color:   #1a7a45;
+  --badge-youtube-bg:   #fff0ee; --badge-youtube-color: #c0392b;
+  --badge-pdf-bg:       #fff6e8; --badge-pdf-color:     #b05a0a;
+  --badge-github-bg:    #f2eeff; --badge-github-color:  #6b3fa0;
+  --badge-reddit-bg:    #fff2ec; --badge-reddit-color:  #c03a12; 
+  --badge-other-bg:     #f2f1ef; --badge-other-color:   #5a5550;
+  
+  --thumb-article: linear-gradient(135deg, #eef2ff 0%, #e4eaff 100%);
+  --thumb-tweet:   linear-gradient(135deg, #e8f7ef 0%, #d4f0e2 100%);
+  --thumb-youtube: linear-gradient(135deg, #fff0ee 0%, #ffddd9 100%);
+  --thumb-pdf:     linear-gradient(135deg, #fff6e8 0%, #fde8c8 100%);
+  --thumb-github:  linear-gradient(135deg, #f2eeff 0%, #e4d8ff 100%);
+  --thumb-reddit:  linear-gradient(135deg, #fff2ec 0%, #ffdece 100%); 
+  --thumb-other:   linear-gradient(135deg, #f2f1ef 0%, #e8e5e0 100%);
+}
+
+// ── Dark theme ──
+[data-theme="dark"] {
+  --bg-base:        #111010;
+  --bg-surface:     #181716;
+  --bg-card:        #181716;
+  --bg-input:       #201f1e;
+  --bg-glass:       rgba(24, 23, 22, 0.82);
+
+  --border:         #282624;
+  --border-hover:   #3d3a37;
+  --border-grid:    transparent;
+
+  --text-primary:   #ede9e3;
+  --text-secondary: #8a837a; 
+  --text-muted:     #c1c1c1;
+  --text-logo:      #ede9e3;
+
+  --nav-bg:         rgba(17, 16, 16, 0.92);
+  --thumb-overlay:  rgba(0, 0, 0, 0.3);
+  --card-hover:     #1e1d1c;
+  --card-shadow:    0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 20px 48px rgba(0,0,0,0.35);
+
+  --tag-bg:         #201f1e;
+  --tag-border:     #302e2c;
+  --tag-color:      #6a6560;
+
+  --filter-active:  #ede9e3; 
+  --filter-muted:   #67615b;
+  --filter-pill-bg: #ede9e3;
+  --filter-pill-color: #111010;
+
+  --fav-active:     #c9924a;
+  --meta-border:    #222120;
+
+  --accent:         #c9924a;
+  --accent-soft:    #2a2218;
+
+  --badge-article-bg:   #171c2e; --badge-article-color: #7b96e8;
+  --badge-tweet-bg:     #0e1e16; --badge-tweet-color:   #4db87a;
+  --badge-youtube-bg:   #201514; --badge-youtube-color: #e06b6b;
+  --badge-pdf-bg:       #201a0e; --badge-pdf-color:     #d4a050;
+  --badge-github-bg:    #1a1528; --badge-github-color:  #a882d4;
+  --badge-reddit-bg:    #201510; --badge-reddit-color:  #e08050; 
+  --badge-other-bg:     #1e1d1c; --badge-other-color:   #706a64;
+
+  --thumb-article: linear-gradient(135deg, #171c2e 0%, #1a2038 100%);
+  --thumb-tweet:   linear-gradient(135deg, #0e1e16 0%, #102018 100%);
+  --thumb-youtube: linear-gradient(135deg, #201514 0%, #241816 100%);
+  --thumb-pdf:     linear-gradient(135deg, #201a0e 0%, #241e10 100%);
+  --thumb-github:  linear-gradient(135deg, #1a1528 0%, #1e1830 100%);
+  --thumb-reddit:  linear-gradient(135deg, #201510 0%, #241812 100%); 
+  --thumb-other:   linear-gradient(135deg, #1e1d1c 0%, #222120 100%);
+}

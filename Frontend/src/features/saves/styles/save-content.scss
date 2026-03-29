@@ -1,0 +1,191 @@
+@import "../../../features/dashboard/styles/variables";
+
+.save-content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  animation: fade-up 0.4s ease 0.1s both;
+
+  @media (max-width: 640px) {
+    padding: 24px 16px 60px;
+    gap: 28px;
+  }
+
+  // ── Section ───────────────────────────────────────────────────────────────
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  &__section-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-family: $font-body;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  &__ai-icon {
+    font-size: 12px;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  // ── AI Summary ────────────────────────────────────────────────────────────
+  &__summary {
+    font-family: $font-body;
+    font-size: 14.5px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    padding: 18px 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-left: 3px solid var(--accent);
+
+    @media (max-width: 640px) {
+      font-size: 13.5px;
+    }
+  }
+
+  // ── Topics ────────────────────────────────────────────────────────────────
+  &__topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__topic {
+    font-size: 11px;
+    font-family: $font-body;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 5px 13px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 20px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--accent);
+    }
+  }
+
+  // ── Tags ──────────────────────────────────────────────────────────────────
+  &__save-tags {
+    margin-left: auto;
+    font-size: 10px;
+    font-family: $font-body;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-family: $font-body;
+    font-weight: 400;
+    padding: 5px 10px 5px 12px;
+    background: var(--tag-bg);
+    color: var(--tag-color);
+    border: 1px solid var(--tag-border);
+    border-radius: 20px;
+    transition: border-color 0.15s, color 0.15s;
+
+    &:hover {
+      border-color: var(--border-hover);
+      color: var(--text-secondary);
+    }
+  }
+
+  &__tag-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    padding: 0;
+    font-size: 12px;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+    line-height: 1;
+
+    &:hover { opacity: 1; }
+  }
+
+  &__tag-input {
+    font-size: 11px;
+    font-family: $font-body;
+    padding: 5px 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    color: var(--text-primary);
+    outline: none;
+    width: 120px;
+    transition: width 0.2s ease;
+
+    &::placeholder { color: var(--text-muted); }
+  }
+
+  &__tag-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-family: $font-body;
+    font-weight: 500;
+    padding: 5px 12px;
+    border: 1px dashed var(--border-hover);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg { font-size: 13px; }
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
