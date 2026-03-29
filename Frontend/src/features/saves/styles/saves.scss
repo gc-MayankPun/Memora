@@ -1,4 +1,4 @@
-@import "../../../features/dashboard/styles/variables";
+@use "../../../app/variables" as *;
 
 .saves-page {
   min-height: 100vh;

@@ -1,4 +1,4 @@
-@import "../../../features/dashboard/styles/variables";
+@use "../../../app/variables" as *;
 
 .save-content {
   max-width: 760px;

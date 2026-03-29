@@ -1,4 +1,4 @@
-@import 'variables';
+@use "../../../app/variables" as *;
 
 .filter-bar {
   background: var(--bg-surface);

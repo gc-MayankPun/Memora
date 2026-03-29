@@ -1,4 +1,4 @@
-@import "variables";
+@use "../../../app/variables" as *;
 
 .save-card {
   background: var(--bg-card);

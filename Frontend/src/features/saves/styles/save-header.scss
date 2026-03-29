@@ -1,4 +1,4 @@
-@import "../../../features/dashboard/styles/variables";
+@use "../../../app/variables" as *;
 
 .save-header {
   animation: fade-up 0.4s ease both;

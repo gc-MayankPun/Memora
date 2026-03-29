@@ -1,4 +1,4 @@
-@import "variables";
+@use "../../../app/variables" as *;
 
 .dashboard {
   min-height: 100vh;
