@@ -58,7 +58,7 @@ export default function SaveContent({ save, onUpdateTags }) {
           Key Topics
         </div>
         <div className="save-content__topics">
-          {save.topics.map((topic) => (
+          {save.topics?.map((topic) => (
             <span key={topic} className="save-content__topic">
               {topic}
             </span>

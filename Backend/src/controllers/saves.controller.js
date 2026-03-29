@@ -209,7 +209,11 @@ export async function getSaves(req, res) {
 
 export async function getSave(req, res) {
   try {
-    const save = await saveModel.findById(req.params.id);
+    const save = await saveModel.findByIdAndUpdate(
+      req.params.id,
+      { lastViewedAt: new Date() },
+      { new: true },
+    );
     if (!save) {
       return res.status(404).json({
         success: false,
