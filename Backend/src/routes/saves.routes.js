@@ -8,17 +8,18 @@ import {
   updateFavorite,
   deleteSave,
   updateTags,
-} from "../controllers/saves.controller.js"; 
+} from "../controllers/saves.controller.js";
+import { authUser } from "../middlewares/auth.middleware.js";
 
 const savesRouter = Router();
 
-savesRouter.post("/", createSave);
-savesRouter.patch("/update", updateSave);
-savesRouter.get("/", getSaves);
-savesRouter.patch("/:id/update-favorite", updateFavorite);
-savesRouter.patch("/:id/update-tags", updateTags);
-savesRouter.get("/exists", checkSave);
-savesRouter.get("/:id", getSave);
-savesRouter.delete("/:id/delete", deleteSave);
+savesRouter.post("/", authUser, createSave);
+savesRouter.patch("/update", authUser, updateSave);
+savesRouter.get("/", authUser, getSaves);
+savesRouter.patch("/:id/update-favorite", authUser, updateFavorite);
+savesRouter.patch("/:id/update-tags", authUser, updateTags);
+savesRouter.get("/exists", authUser, checkSave);
+savesRouter.get("/:id", authUser, getSave);
+savesRouter.delete("/:id/delete", authUser, deleteSave);
 
 export default savesRouter;

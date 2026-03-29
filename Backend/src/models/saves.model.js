@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 const saveSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: [true, "User ID is required"],
+      index: true,
+    },
+
     title: {
       type: String,
       required: [true, "Title is required"],
@@ -11,7 +18,6 @@ const saveSchema = new mongoose.Schema(
       type: String,
       required: [true, "URL is required"],
       trim: true,
-      unique: [true, "URL should be unique"],
     },
     type: {
       type: String,
@@ -55,6 +61,8 @@ const saveSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+saveSchema.index({ userId: 1, url: 1 }, { unique: true });
 
 const saveModel = mongoose.model("saves", saveSchema);
 

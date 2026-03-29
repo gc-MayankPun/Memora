@@ -7,6 +7,7 @@ import { generateSummaryAndTopics } from "../services/ai.service.js";
 export async function createSave(req, res) {
   try {
     const { title, url, note, tags } = req.body;
+    const userId = req.user.id;
 
     if (!title || !url) {
       return res.status(400).json({
@@ -15,11 +16,11 @@ export async function createSave(req, res) {
       });
     }
 
-    const isSaveExists = await saveModel.findOne({ url });
+    const isSaveExists = await saveModel.findOne({ url, userId });
     if (isSaveExists) {
       return res.status(400).json({
         success: false,
-        message: "This URL is already saved in Memora",
+        message: "You have already saved this URL",
       });
     }
 
@@ -38,7 +39,8 @@ export async function createSave(req, res) {
       new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
     );
 
-    const save = await saveModel.create({
+    const saveDoc = await saveModel.create({
+      userId,
       title,
       url,
       note,
@@ -53,7 +55,7 @@ export async function createSave(req, res) {
     res.status(201).json({
       success: true,
       message: "Saved to Memora successfully",
-      save,
+      save: saveDoc,
     });
   } catch (err) {
     res.status(500).json({
@@ -67,6 +69,7 @@ export async function createSave(req, res) {
 export async function updateSave(req, res) {
   try {
     const { title, url, note, tags } = req.body;
+    const userId = req.user.id;
 
     if (!title || !url) {
       return res.status(400).json({
@@ -75,38 +78,21 @@ export async function updateSave(req, res) {
       });
     }
 
-    const type = detectType(url);
-    const { content, thumbnail, favicon, keywords } = await scrapeMetatags(url);
-    const { summary, topics, aiTags } = await generateSummaryAndTopics({
-      title,
-      content,
-      keywords,
-      url,
-    });
-
     const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
 
-    const updatedTags = Array.from(
-      new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
-    );
+    const updatedTags = Array.from(new Set([...(tags || [])].map(normalize)));
 
-    const save = await saveModel.findOneAndUpdate(
-      { url },
+    const saveDoc = await saveModel.findOneAndUpdate(
+      { _id: req.params.id, userId },
       {
         title,
-        url,
         note,
         tags: updatedTags,
-        type,
-        summary: summary || content,
-        thumbnail,
-        favicon,
-        topics,
       },
       { new: true },
     );
 
-    if (!save) {
+    if (!saveDoc) {
       return res.status(404).json({
         success: false,
         message: "Save not found for the provided URL",
@@ -116,7 +102,7 @@ export async function updateSave(req, res) {
     res.status(200).json({
       success: true,
       message: "Save updated successfully",
-      save,
+      save: saveDoc,
     });
   } catch (err) {
     res.status(500).json({
@@ -130,6 +116,7 @@ export async function updateSave(req, res) {
 export async function checkSave(req, res) {
   try {
     const { url } = req.query;
+    const userId = req.user.id;
 
     if (!url) {
       return res.status(400).json({
@@ -138,8 +125,8 @@ export async function checkSave(req, res) {
       });
     }
 
-    const save = await saveModel.findOne({ url });
-    if (!save) {
+    const saveDoc = await saveModel.findOne({ url, userId });
+    if (!saveDoc) {
       return res.status(200).json({
         success: true,
         exists: false,
@@ -147,13 +134,13 @@ export async function checkSave(req, res) {
       });
     }
 
-    const savedAgo = getTimeAgo(save.createdAt);
+    const savedAgo = getTimeAgo(saveDoc.createdAt);
 
     res.status(200).json({
       success: true,
       exists: true,
       message: `You already saved this ${savedAgo}`,
-      id: save._id,
+      id: saveDoc._id,
       savedAgo,
     });
   } catch (err) {
@@ -167,8 +154,11 @@ export async function checkSave(req, res) {
 
 export async function deleteSave(req, res) {
   try {
-    const save = await saveModel.findByIdAndDelete(req.params.id);
-    if (!save) {
+    const userId = req.user.id;
+    const saveId = req.params.id;
+
+    const saveDoc = await saveModel.findOneAndDelete({ _id: saveId, userId });
+    if (!saveDoc) {
       return res.status(404).json({
         success: false,
         message: "Save not found or already deleted",
@@ -190,7 +180,8 @@ export async function deleteSave(req, res) {
 
 export async function getSaves(req, res) {
   try {
-    const saves = await saveModel.find().sort({ createdAt: -1 });
+    const userId = req.user.id;
+    const saves = await saveModel.find({ userId }).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -209,12 +200,14 @@ export async function getSaves(req, res) {
 
 export async function getSave(req, res) {
   try {
-    const save = await saveModel.findByIdAndUpdate(
-      req.params.id,
+    const userId = req.user.id;
+    const saveDoc = await saveModel.findOneAndUpdate(
+      { _id: req.params.id, userId },
       { lastViewedAt: new Date() },
       { new: true },
     );
-    if (!save) {
+
+    if (!saveDoc) {
       return res.status(404).json({
         success: false,
         message: "Save not found",
@@ -224,7 +217,7 @@ export async function getSave(req, res) {
     res.status(200).json({
       success: true,
       message: "Save fetched successfully",
-      save,
+      save: saveDoc,
     });
   } catch (err) {
     res.status(500).json({
@@ -237,10 +230,15 @@ export async function getSave(req, res) {
 
 export async function updateFavorite(req, res) {
   const { isFavorite } = req.body;
+  const userId = req.user.id;
 
   try {
-    const save = await saveModel.findById(req.params.id);
-    if (!save) {
+    const saveDoc = await saveModel.findOne({
+      _id: req.params.id,
+      userId,
+    });
+
+    if (!saveDoc) {
       return res.status(404).json({
         success: false,
         message: "Save not found",
@@ -248,15 +246,15 @@ export async function updateFavorite(req, res) {
     }
 
     if (isFavorite !== undefined) {
-      save.isFavorite = isFavorite;
+      saveDoc.isFavorite = isFavorite;
     }
 
-    const updatedSave = await save.save();
+    await saveDoc.save();
 
     res.status(200).json({
       success: true,
       message: "Save updated successfully",
-      save: updatedSave,
+      save: saveDoc,
     });
   } catch (err) {
     res.status(500).json({
@@ -269,23 +267,28 @@ export async function updateFavorite(req, res) {
 
 export async function updateTags(req, res) {
   const { tags } = req.body;
+  const userId = req.user.id;
 
   try {
-    const save = await saveModel.findById(req.params.id);
-    if (!save) {
+    const saveDoc = await saveModel.findOne({
+      _id: req.params.id,
+      userId,
+    });
+
+    if (!saveDoc) {
       return res.status(404).json({
         success: false,
         message: "Save not found",
       });
     }
 
-    save.tags = tags || [];
-    const updatedSave = await save.save();
+    saveDoc.tags = tags || [];
+    await saveDoc.save();
 
     res.status(200).json({
       success: true,
       message: "Tags updated successfully",
-      save: updatedSave,
+      save: saveDoc,
     });
   } catch (err) {
     res.status(500).json({
