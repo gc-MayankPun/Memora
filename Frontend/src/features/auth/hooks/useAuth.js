@@ -1,0 +1,82 @@
+import { useContext } from "react";
+import { AuthContext } from "../auth.context";
+import {
+  getMe,
+  login,
+  register,
+  resendVerificationEmail,
+} from "../services/auth.api";
+import { toast } from "react-toastify";
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  const { loading, setLoading, user, setUser } = context;
+
+  async function handleRegister({ email, username, password }) {
+    setLoading(true);
+    try {
+      const data = await register({ email, username, password });
+      toast.success(data.message); 
+      localStorage.setItem("pendingEmail", email);
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleLogin({ username, password }) {
+    setLoading(true);
+    try {
+      const data = await login({ username, password });
+      toast.success(data.message);
+      setUser(data.user);
+      localStorage.removeItem("pendingEmail");
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGetMe() {
+    setLoading(true);
+    try {
+      const data = await getMe();
+      setUser(data.user);
+
+      return data;
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResendVerification({ email }) {
+    setLoading(true);
+    try {
+      const data = await resendVerificationEmail({ email });
+      toast.success(data.message);
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return {
+    loading,
+    user,
+    handleRegister,
+    handleLogin,
+    handleGetMe,
+    handleResendVerification,
+  };
+};

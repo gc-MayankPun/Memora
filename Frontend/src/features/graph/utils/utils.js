@@ -10,7 +10,7 @@ export function getResurfaced(saves) {
         ? (NOW - new Date(s.lastViewedAt)) / (1000 * 60 * 60 * 24)
         : Infinity;
 
-    //   return daysSinceCreated >= 0 && daysSinceViewed >= 0; // For Testing
+      // return daysSinceCreated >= 0 && daysSinceViewed >= 0; // For Testing
         return daysSinceCreated >= 7 && daysSinceViewed >= 5;
     })
     .sort(() => Math.random() - 0.5)
