@@ -1,0 +1,117 @@
+@use "../../../app/variables" as *;
+
+.memory-panel {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 14px;
+  }
+
+  &__icon {
+    font-size: 14px;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  &__title {
+    font-size: 10px;
+    font-family: $font-body;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
+
+    &:hover {
+      border-color: var(--border-hover);
+      background: var(--card-hover);
+    }
+  }
+
+  &__thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--bg-input);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  &__card-title {
+    font-size: 11.5px;
+    font-family: $font-body;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+  }
+
+  &__card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__card-domain {
+    font-size: 9.5px;
+    font-family: $font-mono;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90px;
+  }
+
+  &__card-ago {
+    font-size: 9.5px;
+    font-family: $font-mono;
+    color: var(--accent);
+    letter-spacing: 0.2px;
+    flex-shrink: 0;
+
+    &::before {
+      content: "·";
+      margin-right: 6px;
+      color: var(--text-muted);
+    }
+  }
+}

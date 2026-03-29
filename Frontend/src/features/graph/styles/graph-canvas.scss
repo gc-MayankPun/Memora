@@ -1,0 +1,24 @@
+@use "../../../app/variables" as *;
+
+.graph-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .graph-link {
+    transition:
+      stroke 0.2s ease,
+      stroke-width 0.2s ease;
+  }
+
+  .topic-node,
+  .save-node {
+    transition: opacity 0.2s ease;
+  }
+}
