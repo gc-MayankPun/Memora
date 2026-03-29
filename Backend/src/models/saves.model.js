@@ -26,13 +26,21 @@ const saveSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    content: {
+    summary: {
       type: String,
       default: "",
     },
     thumbnail: {
       type: String,
       default: "",
+    },
+    favicon: {
+      type: String,
+      default: "",
+    },
+    topics: {
+      type: [String],
+      default: [],
     },
     isFavorite: {
       type: Boolean,

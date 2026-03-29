@@ -4,17 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import "../styles/save-content.scss";
 
-// ── Fake AI data (swap with real API call later) ──────────────────────────────
-const getFakeAiData = (save) => ({
-  summary:
-    "This resource dives deep into modern frontend architecture patterns, exploring how teams can structure scalable React applications without sacrificing developer experience. It highlights practical approaches to state management, code splitting, and component design that hold up as products grow.",
-  topics: ["React", "Frontend", "Architecture", "Performance", "DX"],
-});
-// ─────────────────────────────────────────────────────────────────────────────
-
 export default function SaveContent({ save, onUpdateTags }) {
-  const aiData = getFakeAiData(save);
-
   const [tags, setTags] = useState(save.tags || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputVal, setInputVal] = useState("");
@@ -44,19 +34,21 @@ export default function SaveContent({ save, onUpdateTags }) {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") addTag();
-    if (e.key === "Escape") { setInputVisible(false); setInputVal(""); }
+    if (e.key === "Escape") {
+      setInputVisible(false);
+      setInputVal("");
+    }
   };
 
   return (
     <div className="save-content">
-
       {/* AI Summary */}
       <section className="save-content__section">
         <div className="save-content__section-label">
           <HiSparkles className="save-content__ai-icon" />
           AI Summary
         </div>
-        <p className="save-content__summary">{aiData.summary}</p>
+        <p className="save-content__summary">{save.summary}</p>
       </section>
 
       {/* AI Topics */}
@@ -66,8 +58,10 @@ export default function SaveContent({ save, onUpdateTags }) {
           Key Topics
         </div>
         <div className="save-content__topics">
-          {aiData.topics.map((topic) => (
-            <span key={topic} className="save-content__topic">{topic}</span>
+          {save.topics.map((topic) => (
+            <span key={topic} className="save-content__topic">
+              {topic}
+            </span>
           ))}
         </div>
       </section>
@@ -118,7 +112,6 @@ export default function SaveContent({ save, onUpdateTags }) {
           )}
         </div>
       </section>
-
     </div>
   );
 }

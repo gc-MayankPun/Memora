@@ -21,7 +21,7 @@ const TYPE_CONFIG = {
 };
 
 export default function SaveHeader({ save, onBack, onDelete, onToggleFavorite }) {
-  const { title, url, type, thumbnail, isFavorite, createdAt } = save;
+  const { title, url, type, thumbnail, favicon, isFavorite, createdAt } = save;
   const config = TYPE_CONFIG[type] || TYPE_CONFIG.article;
 
   const domain = (() => {
@@ -66,10 +66,12 @@ export default function SaveHeader({ save, onBack, onDelete, onToggleFavorite })
       >
         {thumbnail && (
           <img
-            src={thumbnail}
+            src={thumbnail} 
             alt={title}
             className="save-header__hero-img"
-            onError={(e) => { e.target.style.display = "none"; }}
+            onError={(e) => {
+              e.target.src = favicon; 
+            }} 
           />
         )}
         <div className="save-header__hero-overlay" />

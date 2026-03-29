@@ -27,23 +27,28 @@ export const scrapeMetatags = async (url) => {
       }
     };
 
+    const faviconRaw =
+      $("link[rel='icon']").attr("href") ||
+      $("link[rel='shortcut icon']").attr("href") ||
+      $("link[rel='apple-touch-icon']").attr("href") ||
+      "";
+
     const thumbnailRaw = getMetatag("image");
 
+    const favicon = faviconRaw ? toAbsoluteUrl(url, faviconRaw) : "";
+    const thumbnail = thumbnailRaw ? toAbsoluteUrl(url, thumbnailRaw) : "";
+
     return {
-      url,
-      title: $("title").text() || "",
-      thumbnail: toAbsoluteUrl(url, thumbnailRaw),
+      thumbnail,
+      favicon,
       content: getMetatag("description"),
-      author: getMetatag("author"),
       keywords: getMetatag("keywords"),
     };
   } catch (err) {
     return {
-      url,
-      title: "",
       thumbnail: "",
+      favicon: "",
       content: "",
-      author: "",
       keywords: "",
     };
   }

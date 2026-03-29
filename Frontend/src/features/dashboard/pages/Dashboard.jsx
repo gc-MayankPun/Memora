@@ -23,7 +23,9 @@ export default function Dashboard() {
     ? filteredByType.filter(
         (s) =>
           s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.tags?.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
+          s.tags?.some((t) =>
+            t.toLowerCase().includes(searchQuery.toLowerCase()),
+          ),
       )
     : filteredByType;
 
@@ -37,7 +39,9 @@ export default function Dashboard() {
       {loading ? (
         <div className="dashboard__loading">
           <div className="dashboard__loading-dots">
-            <span /><span /><span />
+            <span />
+            <span />
+            <span />
           </div>
           <p>Loading your saves</p>
         </div>
@@ -56,7 +60,11 @@ export default function Dashboard() {
       ) : (
         <div className="dashboard__grid">
           {filteredSaves.map((save, index) => (
-            <SaveCard key={save._id} save={save} index={index} />
+            <SaveCard
+              key={save._id}
+              save={save}
+              index={index} 
+            />
           ))}
         </div>
       )}

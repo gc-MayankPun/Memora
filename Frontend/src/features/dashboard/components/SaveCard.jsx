@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { CiStar } from "react-icons/ci";
-import { FaStar } from "react-icons/fa"; 
+import { FaStar } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import "../styles/save-card.scss";
@@ -32,8 +32,17 @@ const TYPE_CONFIG = {
 
 export default function SaveCard({ save, index = 0 }) {
   const navigate = useNavigate();
-  const { _id, title, url, type, tags, thumbnail, isFavorite, createdAt } =
-    save;
+  const {
+    _id,
+    title,
+    url,
+    type,
+    tags,
+    thumbnail,
+    favicon,
+    isFavorite,
+    createdAt,
+  } = save;
   const config = TYPE_CONFIG[type] || TYPE_CONFIG.article;
 
   const domain = (() => {
@@ -59,11 +68,13 @@ export default function SaveCard({ save, index = 0 }) {
             src={thumbnail}
             alt={title}
             onError={(e) => {
-              e.target.style.display = "none";
-              const placeholder = e.target
-                .closest(".save-card__thumbnail")
-                .querySelector(".save-card__placeholder");
-              if (placeholder) placeholder.style.display = "flex";
+              e.target.src = favicon;
+
+              // e.target.style.display = "none";
+              // const placeholder = e.target
+              //   .closest(".save-card__thumbnail")
+              //   .querySelector(".save-card__placeholder");
+              // if (placeholder) placeholder.style.display = "flex";
             }}
           />
         )}

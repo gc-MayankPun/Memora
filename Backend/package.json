@@ -12,11 +12,13 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@langchain/mistralai": "^1.0.7",
     "axios": "^1.14.0",
     "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "langchain": "^1.2.37",
     "mongoose": "^9.3.3",
     "morgan": "^1.10.1",
     "node-fetch": "^3.3.2"

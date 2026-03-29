@@ -4,8 +4,7 @@ import { DashboardContext } from "../dashboard.context";
 import { toast } from "react-toastify";
 
 export const useDashboard = () => {
-  const context = useContext(DashboardContext);
-  console.log(context);
+  const context = useContext(DashboardContext); 
   const { setLoading, loading, setSaves, saves } = context;
 
   async function handleFetchAllSaves() {

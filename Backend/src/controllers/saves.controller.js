@@ -2,6 +2,7 @@ import { scrapeMetatags } from "../services/scraper.service.js";
 import { detectType } from "../services/detector.service.js";
 import saveModel from "../models/saves.model.js";
 import { getTimeAgo } from "../utils/util.js";
+import { generateSummaryAndTopics } from "../services/ai.service.js";
 
 export async function createSave(req, res) {
   try {
@@ -23,16 +24,30 @@ export async function createSave(req, res) {
     }
 
     const type = detectType(url);
-    const { content, thumbnail } = await scrapeMetatags(url);
+    const { content, thumbnail, favicon, keywords } = await scrapeMetatags(url);
+    const { summary, topics, aiTags } = await generateSummaryAndTopics({
+      title,
+      content,
+      keywords,
+      url,
+    });
+
+    const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
+
+    const updatedTags = Array.from(
+      new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
+    );
 
     const save = await saveModel.create({
       title,
       url,
       note,
-      tags,
+      tags: updatedTags,
       type,
-      content,
+      summary: summary || content,
       thumbnail,
+      favicon,
+      topics,
     });
 
     res.status(201).json({
@@ -154,7 +169,7 @@ export async function getSave(req, res) {
 }
 
 export async function updateSave(req, res) {
-  const { isFavorite } = req.body; 
+  const { isFavorite } = req.body;
 
   try {
     const save = await saveModel.findById(req.params.id);

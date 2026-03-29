@@ -8,7 +8,14 @@ import "../styles/saves.scss";
 export default function Saves() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { save, loading, handleFetchSave, handleDeleteSave, handleToggleFavorite, handleUpdateTags } = useSaves();
+  const {
+    save,
+    loading,
+    handleFetchSave,
+    handleDeleteSave,
+    handleToggleFavorite,
+    handleUpdateTags,
+  } = useSaves();
 
   useEffect(() => {
     handleFetchSave(id);
@@ -23,7 +30,9 @@ export default function Saves() {
     return (
       <div className="saves-page__loading">
         <div className="saves-page__loading-dots">
-          <span /><span /><span />
+          <span />
+          <span />
+          <span />
         </div>
         <p>Loading save</p>
       </div>

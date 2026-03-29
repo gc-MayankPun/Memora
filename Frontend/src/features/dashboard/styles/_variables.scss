@@ -1,9 +1,9 @@
-// ── Fonts ── 
+// Fonts 
 $font-display: poppins, 'Helvetica Neue', sans-serif;
 $font-body:    'DM Sans', 'Helvetica Neue', sans-serif;
 $font-mono:    'DM Mono', 'Courier New', monospace;
 
-// ── Light theme ──
+// Light theme 
 [data-theme="light"] {
   --bg-base:        #faf9f7;
   --bg-surface:     #ffffff;
@@ -58,7 +58,7 @@ $font-mono:    'DM Mono', 'Courier New', monospace;
   --thumb-other:   linear-gradient(135deg, #f2f1ef 0%, #e8e5e0 100%);
 }
 
-// ── Dark theme ──
+// Dark theme
 [data-theme="dark"] {
   --bg-base:        #111010;
   --bg-surface:     #181716;
