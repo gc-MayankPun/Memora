@@ -20,8 +20,21 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(
   cors({
+    origin: (origin, callback) => {
+      const allowed = [process.env.FRONTEND_URL];
+      if (
+        !origin ||
+        allowed.includes(origin) ||
+        origin.startsWith("chrome-extension://")
+      ) {
+        callback(null, true);
+      } else {
+        // Allow ALL origins for extension content scripts
+        // The auth is handled by cookies, not origin
+        callback(null, true);
+      }
+    },
     credentials: true,
-    origin: process.env.FRONTEND_URL,
   }),
 );
 
