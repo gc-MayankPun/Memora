@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   deleteSave,
   fetchSave,
+  fetchAllSaves,
   updateNote,
   updateSave,
   updateTags,
@@ -12,15 +13,18 @@ import { toast } from "react-toastify";
 export const useSaves = () => {
   const context = useContext(SaveContext);
   const { setLoading, loading, setSave, save } = context;
+  const [allSaves, setAllSaves] = useState([]);
 
   async function handleFetchSave(id) {
     setLoading(true);
-
     try {
-      const data = await fetchSave(id);
-      setSave(data.save);
-
-      return data;
+      const [saveData, allData] = await Promise.all([
+        fetchSave(id),
+        fetchAllSaves(),
+      ]);
+      setSave(saveData.save);
+      setAllSaves(allData.saves || []);
+      return saveData;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
@@ -77,5 +81,6 @@ export const useSaves = () => {
     handleUpdateNote,
     loading,
     save,
+    allSaves,
   };
 };

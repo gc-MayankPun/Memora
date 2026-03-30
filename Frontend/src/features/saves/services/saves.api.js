@@ -36,3 +36,8 @@ export const updateNote = async (id, note) => {
   const response = await api.patch(`/api/saves/${id}/update-note`, note);
   return response.data;
 };
+
+export const fetchAllSaves = async () => {
+  const response = await api.get("/api/saves");
+  return response.data;
+};

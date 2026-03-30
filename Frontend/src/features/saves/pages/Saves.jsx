@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { useSaves } from "../hooks/useSaves";
 import SaveHeader from "../components/SaveHeader";
 import SaveContent from "../components/SaveContent";
+import RelatedSaves from "../components/RelatedSaves";
 import "../styles/saves.scss";
 
 export default function Saves() {
@@ -11,11 +12,12 @@ export default function Saves() {
   const {
     save,
     loading,
+    allSaves,
     handleFetchSave,
     handleDeleteSave,
     handleToggleFavorite,
     handleUpdateTags,
-    handleUpdateNote
+    handleUpdateNote,
   } = useSaves();
 
   useEffect(() => {
@@ -60,11 +62,27 @@ export default function Saves() {
         onDelete={onDelete}
         onToggleFavorite={() => handleToggleFavorite(id, save.isFavorite)}
       />
-      <SaveContent
-        save={save}
-        onUpdateTags={(tags) => handleUpdateTags(id, tags)}
-        onUpdateNote={(note) => handleUpdateNote(id, note)} 
-      />
+      <div className="saves-page__body">
+        {/* Main content */}
+        <div className="saves-page__main">
+          <SaveContent
+            save={save}
+            onUpdateTags={(tags) => handleUpdateTags(id, tags)}
+            onUpdateNote={(note) => handleUpdateNote(id, note)}
+          />
+          {/* Related — bottom on mobile */}
+          <div className="saves-page__related-bottom">
+            <div className="saves-page__related-inner">
+              <RelatedSaves currentSave={save} allSaves={allSaves} />
+            </div>
+          </div>
+        </div>
+
+        {/* Related — sidebar on desktop */}
+        <aside className="saves-page__sidebar">
+          <RelatedSaves currentSave={save} allSaves={allSaves} />
+        </aside>
+      </div>
     </div>
   );
 }
