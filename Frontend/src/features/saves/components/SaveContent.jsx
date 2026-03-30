@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import { PiNotePencilLight } from "react-icons/pi";
 import "../styles/save-content.scss";
+import AddToCollection from "../../collections/components/AddToCollection";
 
 export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
   const [tags, setTags] = useState(save.tags || []);
@@ -160,6 +161,11 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
             </button>
           )}
         </div>
+      </section>
+
+      <section className="save-content__section">
+        <div className="save-content__section-label">Collections</div>
+        <AddToCollection saveId={save._id} />
       </section>
     </div>
   );

@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import FilterBar from "../components/FilterBar";
 import SaveCard from "../components/SaveCard";
 import "../styles/dashboard.scss";
+import { Link } from "react-router";
 
 export default function Dashboard() {
   const {
@@ -68,6 +69,16 @@ export default function Dashboard() {
             {isFiltered
               ? "Try a different search term or filter."
               : "Use the Memora extension to save articles, tweets, videos and more from the web."}
+          </p>
+          <p className="dashboard__empty-link">
+            <a
+              href="https://github.com/gc-MayankPun/Memora"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click here
+            </a>{" "}
+            to setup the extension
           </p>
         </div>
       ) : (

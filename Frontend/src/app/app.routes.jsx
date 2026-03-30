@@ -8,6 +8,9 @@ import Saves from "../features/saves/pages/Saves";
 import Graph from "../features/graph/pages/Graph";
 import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
+import { CollectionProvider } from "../features/collections/collection.context";
+import Collections from "../features/collections/pages/Collections";
+import CollectionDetail from "../features/collections/pages/CollectionDetail";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +21,7 @@ export const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  
+
   {
     path: "/verify-email",
     element: <VerifyEmail />,
@@ -37,9 +40,7 @@ export const router = createBrowserRouter([
     path: "/saves/:id",
     element: (
       <Protected>
-        <SavesProvider>
-          <Saves />
-        </SavesProvider>
+        <Saves />
       </Protected>
     ),
   },
@@ -48,6 +49,25 @@ export const router = createBrowserRouter([
     element: (
       <Protected>
         <Graph />
+      </Protected>
+    ),
+  },
+  {
+    path: "/collections",
+    element: (
+      <Protected>
+        <Collections />
+      </Protected>
+    ),
+  },
+
+  {
+    path: "/collections/:id",
+    element: (
+      <Protected>
+        <CollectionProvider>
+          <CollectionDetail />
+        </CollectionProvider>
       </Protected>
     ),
   },
