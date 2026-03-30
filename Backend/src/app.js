@@ -5,8 +5,11 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import path from "path";
 
 const app = express();
+
+const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,5 +25,7 @@ app.use(
 app.use("/api/saves", savesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/collections", collectionRouter);
+
+app.use(express.static(path.join(__dirname, "frontend/dist")));
 
 export default app;
