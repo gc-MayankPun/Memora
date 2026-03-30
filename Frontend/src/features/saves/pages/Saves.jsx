@@ -56,7 +56,7 @@ export default function Saves() {
     <div className="saves-page">
       <SaveHeader
         save={save}
-        onBack={() => navigate(-1)}
+        onBack={() => navigate("/")}
         onDelete={onDelete}
         onToggleFavorite={() => handleToggleFavorite(id, save.isFavorite)}
       />

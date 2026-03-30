@@ -18,7 +18,7 @@ export default function Graph() {
     <div className="graph-page">
       {/* Topbar */}
       <div className="graph-page__topbar">
-        <button className="graph-page__back" onClick={() => navigate(-1)}>
+        <button className="graph-page__back" onClick={() => navigate("/")}>
           <IoArrowBack /> Back
         </button>
         <div className="graph-page__heading">
