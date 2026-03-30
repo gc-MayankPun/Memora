@@ -3,6 +3,7 @@ import userModel from "../models/user.model.js";
 import saveModel from "../models/saves.model.js";
 import { emailHTML, verifyEmailHTML } from "../utils/util.js";
 import jwt from "jsonwebtoken";
+import { cookieOptions } from "../utils/constants.js";
 
 export async function register(req, res) {
   const { username, email, password } = req.body;
@@ -83,7 +84,7 @@ export async function login(req, res) {
     { expiresIn: "7d" },
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, cookieOptions);
   res.status(200).json({
     success: true,
     message: "User logged in successfully",
@@ -96,7 +97,7 @@ export async function login(req, res) {
 }
 
 export async function logout(req, res) {
-  res.clearCookie("token");
+  res.clearCookie("token", cookieOptions);
   res.status(200).json({
     success: true,
     message: "User logged out successfully",
@@ -111,7 +112,7 @@ export async function deleteUser(req, res) {
 
     await userModel.findByIdAndDelete(userId);
 
-    res.clearCookie("token");
+    res.clearCookie("token", cookieOptions);
     res.status(200).json({
       success: true,
       message: "User account deleted successfully",
