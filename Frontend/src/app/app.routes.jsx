@@ -40,11 +40,7 @@ export const router = createBrowserRouter([
     path: "/saves/:id",
     element: (
       <Protected>
-        <SavesProvider>
-          <CollectionProvider>
-            <Saves />
-          </CollectionProvider>
-        </SavesProvider>
+        <Saves />
       </Protected>
     ),
   },
@@ -60,21 +56,19 @@ export const router = createBrowserRouter([
     path: "/collections",
     element: (
       <Protected>
-        <CollectionProvider>
-          <Collections />
-        </CollectionProvider>
+        <Collections />
       </Protected>
     ),
   },
 
   {
-  path: "/collections/:id",
-  element: (
-    <Protected>
-      <CollectionProvider>
-        <CollectionDetail />
-      </CollectionProvider>
-    </Protected>
-  ),
-},
+    path: "/collections/:id",
+    element: (
+      <Protected>
+        <CollectionProvider>
+          <CollectionDetail />
+        </CollectionProvider>
+      </Protected>
+    ),
+  },
 ]);

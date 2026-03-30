@@ -50,9 +50,7 @@ export default function CollectionDetail() {
 
   // Fetch collections if not yet loaded, then fetch saves for this collection
   useEffect(() => {
-    if (collections.length === 0) {
-      handleGetCollections();
-    }
+    handleGetCollections();
   }, []);
 
   useEffect(() => {

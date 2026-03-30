@@ -13,13 +13,22 @@ import { toast } from "react-toastify";
 
 export const useCollection = () => {
   const context = useContext(CollectionContext);
-  const { loading, setLoading, collections, setCollections } = context;
+  const {
+    loading,
+    setLoading,
+    collections,
+    setCollections,
+    hasFetched,
+    setHasFetched,
+  } = context;
 
   async function handleGetCollections() {
+    if (hasFetched) return;
     setLoading(true);
     try {
       const data = await getCollections();
       setCollections(data.collections || []);
+      setHasFetched(true);
       return data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");

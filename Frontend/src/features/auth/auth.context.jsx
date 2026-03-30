@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function initAuth() {
       try { 
+        if(user) return;
         const data = await getMe();
         setUser(data.user); 
       } catch (err) {

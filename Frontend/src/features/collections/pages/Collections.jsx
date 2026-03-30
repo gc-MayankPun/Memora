@@ -9,7 +9,14 @@ import "../styles/collections.scss";
 
 export default function Collections() {
   const navigate = useNavigate();
-  const { collections, loading, handleGetCollections, handleCreateCollection, handleDeleteCollection, handleUpdateCollection } = useCollection();
+  const {
+    collections,
+    loading,
+    handleGetCollections,
+    handleCreateCollection,
+    handleDeleteCollection,
+    handleUpdateCollection,
+  } = useCollection();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState(null);
 
@@ -41,13 +48,18 @@ export default function Collections() {
     <div className="collections-page">
       {/* Topbar */}
       <div className="collections-page__topbar">
-        <button className="collections-page__back" onClick={() => navigate("/")}>
+        <button
+          className="collections-page__back"
+          onClick={() => navigate("/")}
+        >
           <IoArrowBack /> Back
         </button>
         <div className="collections-page__heading">
           <h1 className="collections-page__title">Collections</h1>
           {collections.length > 0 && (
-            <span className="collections-page__count">{collections.length}</span>
+            <span className="collections-page__count">
+              {collections.length}
+            </span>
           )}
         </div>
         <button
@@ -62,7 +74,9 @@ export default function Collections() {
       {loading ? (
         <div className="collections-page__loading">
           <div className="collections-page__loading-dots">
-            <span /><span /><span />
+            <span />
+            <span />
+            <span />
           </div>
           <p>Loading collections</p>
         </div>
