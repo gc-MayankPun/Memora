@@ -28,3 +28,13 @@ export const resendVerificationEmail = async ({ email }) => {
   const response = await api.post("/api/auth/resend-verification", { email });
   return response.data;
 };
+
+export const logoutUser = async () => {
+  const response = await api.post("/api/auth/logout");
+  return response.data;
+};
+
+export const deleteAccount = async () => {
+  const response = await api.delete("/api/auth/delete-account");
+  return response.data;
+};

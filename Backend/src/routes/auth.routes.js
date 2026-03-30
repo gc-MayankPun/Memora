@@ -25,6 +25,6 @@ authRouter.post("/resend-verification", resendVerificationEmail);
 // Protected Routes
 authRouter.get("/get-me", authUser, getMe);
 authRouter.post("/logout", authUser, logout);
-authRouter.delete("/delete-user", authUser, deleteUser);
+authRouter.delete("/delete-account", authUser, deleteUser);
 
 export default authRouter;

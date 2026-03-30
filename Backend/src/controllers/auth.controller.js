@@ -1,5 +1,6 @@
 import { sendEmail } from "../services/mail.service.js";
 import userModel from "../models/user.model.js";
+import saveModel from "../models/saves.model.js";
 import { emailHTML, verifyEmailHTML } from "../utils/util.js";
 import jwt from "jsonwebtoken";
 
@@ -94,9 +95,34 @@ export async function login(req, res) {
   });
 }
 
-export async function logout(req, res) {}
+export async function logout(req, res) {
+  res.clearCookie("token");
+  res.status(200).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+}
 
-export async function deleteUser(req, res) {}
+export async function deleteUser(req, res) {
+  try {
+    const userId = req.user.id;
+
+    await saveModel.deleteMany({ userId });
+
+    await userModel.findByIdAndDelete(userId);
+
+    res.clearCookie("token");
+    res.status(200).json({
+      success: true,
+      message: "User account deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete user account",
+    });
+  }
+}
 
 export async function getMe(req, res) {
   const user = await userModel.findById(req.user.id);
