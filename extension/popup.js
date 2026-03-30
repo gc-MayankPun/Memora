@@ -4,21 +4,30 @@ let update = false;
 
 // ── Screen helpers ──
 function showScreen(name) {
-  document.getElementById("screen-save").classList.add("hidden");
-  document.getElementById("screen-saved").classList.add("hidden");
-  document.getElementById("screen-exists").classList.add("hidden");
+  ["save", "saved", "exists", "login"].forEach((s) => {
+    document.getElementById(`screen-${s}`).classList.add("hidden");
+  });
   document.getElementById(`screen-${name}`).classList.remove("hidden");
 }
 
-// ── Open full app on ↗ click ──
+// ── Open app buttons ──
 ["open-app", "open-app-2", "open-app-3"].forEach((id) => {
-  document.getElementById(id).addEventListener("click", (e) => {
-    e.preventDefault();
-    chrome.tabs.create({ url: APP_URL });
-  });
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: APP_URL });
+    });
+  }
 });
 
-// ── On popup open: get current tab info ──
+// ── Open login button ──
+document.getElementById("open-login-btn").addEventListener("click", (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: `${APP_URL}/login` });
+});
+
+// ── On popup open ──
 chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
   const tab = tabs[0];
   const url = tab.url;
@@ -27,19 +36,24 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
   document.getElementById("page-title").value = title || "";
   document.getElementById("page-url").value = url || "";
 
-  // Check if this URL is already saved
   try {
     const res = await fetch(
       `${API_URL}/api/saves/exists?url=${encodeURIComponent(url)}`,
+      { credentials: "include" },
     );
+
+    // 401 = not logged in
+    if (res.status === 401) {
+      showScreen("login");
+      return;
+    }
+
     const data = await res.json();
 
     if (data.exists) {
-      const d = document.getElementById("saved-ago-text");
-      d.textContent = `You saved this ${data.savedAgo || "before"}`;
+      document.getElementById("saved-ago-text").textContent =
+        `You saved this ${data.savedAgo || "before"}`;
 
-      document.getElementById("view-existing-btn").href =
-        `${APP_URL}/saves/${data.id}`;
       document
         .getElementById("view-existing-btn")
         .addEventListener("click", (e) => {
@@ -51,7 +65,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       return;
     }
   } catch (err) {
-    // backend not running yet, just show the save form
+    // backend not running — still show save form
   }
 
   showScreen("save");
@@ -75,49 +89,48 @@ document.getElementById("save-btn").addEventListener("click", async () => {
   btn.textContent = "Saving...";
 
   try {
-    let res;
-    if (!update) {
-      res = await fetch(`${API_URL}/api/saves`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, url, note, tags }),
-      });
-    } else {
-      res = await fetch(`${API_URL}/api/saves/update`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, url, note, tags }),
-      });
+    const endpoint = update
+      ? `${API_URL}/api/saves/update`
+      : `${API_URL}/api/saves`;
+
+    const res = await fetch(endpoint, {
+      method: update ? "PATCH" : "POST",
+      credentials: "include", // ← auth cookie
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, url, note, tags }),
+    });
+
+    // 401 = session expired mid-session
+    if (res.status === 401) {
+      showScreen("login");
+      return;
     }
 
     const data = await res.json();
 
-    // Show auto-generated tags if backend returns them
-    if (data.save?.tags && data.save.tags.length > 0) {
+    if (data.save?.tags?.length > 0) {
       document.getElementById("auto-tags-text").textContent =
         `Tags: ${data.save.tags.join(", ")}`;
     }
 
-    // Wire up "View in Memora" button
     if (data.save?._id) {
-      const viewBtn = document.getElementById("view-item-btn");
-      viewBtn.href = `${APP_URL}/saves/${data.id}`;
-      viewBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        chrome.tabs.create({ url: `${APP_URL}/saves/${data.save._id}` });
-      });
+      document
+        .getElementById("view-item-btn")
+        .addEventListener("click", (e) => {
+          e.preventDefault();
+          chrome.tabs.create({ url: `${APP_URL}/saves/${data.save._id}` });
+        });
     }
 
     showScreen("saved");
   } catch (err) {
     btn.disabled = false;
     btn.textContent = "Save to Memora";
-    const errMsg = document.getElementById("error-msg");
-    errMsg.classList.remove("hidden");
+    document.getElementById("error-msg").classList.remove("hidden");
   }
 });
 
-// ── "Save again anyway" button ──
+// ── Save again anyway ──
 document.getElementById("save-anyway-btn").addEventListener("click", () => {
   showScreen("save");
   update = true;

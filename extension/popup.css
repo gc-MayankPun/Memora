@@ -80,7 +80,9 @@ textarea {
   border-radius: 6px;
   outline: none;
   resize: none;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 input[type="text"]:focus,
@@ -107,7 +109,9 @@ button#save-btn {
   border: none;
   border-radius: 7px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition:
+    background 0.15s,
+    transform 0.1s;
 }
 
 button#save-btn:hover {
@@ -191,4 +195,34 @@ button#save-btn:disabled {
   border-radius: 6px;
   padding: 8px 10px;
   text-align: center;
+}
+
+.login-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+
+.login-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.login-btn {
+  width: 100%;
+  text-align: center;
+  padding: 9px 16px;
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.login-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.login-hint {
+  font-size: 11px;
+  color: #bbb;
 }
