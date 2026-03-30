@@ -9,9 +9,11 @@ import path from "path";
 
 const app = express();
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
@@ -26,10 +28,8 @@ app.use("/api/saves", savesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/collections", collectionRouter);
 
-app.use(express.static(path.join(__dirname, "frontend/dist")));
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+app.use("/{*path}", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 });
 
 export default app;
