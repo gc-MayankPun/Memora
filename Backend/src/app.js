@@ -1,3 +1,4 @@
+import collectionRouter from "./routes/collection.routes.js";
 import savesRouter from "./routes/saves.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
@@ -20,5 +21,6 @@ app.use(
 
 app.use("/api/saves", savesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/collections", collectionRouter);
 
 export default app;

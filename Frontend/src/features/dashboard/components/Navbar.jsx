@@ -84,6 +84,13 @@ export default function Navbar({
 
         <button
           className="navbar__graph-btn"
+          onClick={() => navigate("/collections")}
+        >
+          ◫ <span>Collections</span>
+        </button>
+
+        <button
+          className="navbar__graph-btn"
           onClick={() => navigate("/graph")}
         >
           ◈ <span>Graph</span>
