@@ -9,11 +9,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function initAuth() {
-      try {
-        console.log("Fetched")
+      try { 
         const data = await getMe();
-        setUser(data.user);
-        console.log(data)
+        setUser(data.user); 
       } catch (err) {
         setUser(null);
       } finally {

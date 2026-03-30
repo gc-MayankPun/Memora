@@ -13,6 +13,7 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
 
   const [note, setNote] = useState(save.note || "");
   const [editingNote, setEditingNote] = useState(false);
+  const [noteDirty, setNoteDirty] = useState(false);
 
   const addTag = () => {
     const trimmed = inputVal.trim().toLowerCase().replace(/\s+/g, "-");
@@ -46,6 +47,7 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
 
   const saveNote = () => {
     setEditingNote(false);
+    setNoteDirty(false);
     if (note !== save.note) onUpdateNote(note);
   };
 
@@ -69,6 +71,11 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
         <div className="save-content__section-label">
           <PiNotePencilLight className="save-content__note-icon" />
           Your Note
+          {noteDirty && (
+            <button className="save-content__save-tags" onClick={saveNote}>
+              Save
+            </button>
+          )}
         </div>
 
         {editingNote ? (
@@ -76,7 +83,10 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
             autoFocus
             className="save-content__note-input"
             value={note}
-            onChange={(e) => setNote(e.target.value)}
+            onChange={(e) => {
+              setNote(e.target.value);
+              setNoteDirty(e.target.value !== save.note); // ← mark dirty only if actually changed
+            }}
             onBlur={saveNote}
             onKeyDown={handleNoteKeyDown}
             placeholder="Why did you save this? What stood out?"

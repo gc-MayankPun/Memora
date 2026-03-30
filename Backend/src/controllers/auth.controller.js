@@ -20,7 +20,7 @@ export async function register(req, res) {
     username,
     email,
     password,
-    verificationExpiresAt: new Date(Date.now() + 60 * 1000), // 10 min
+    verificationExpiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 min
   });
 
   const emailVerificationToken = jwt.sign(
