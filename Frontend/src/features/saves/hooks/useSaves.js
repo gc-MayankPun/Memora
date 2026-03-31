@@ -17,11 +17,14 @@ export const useSaves = () => {
 
   async function handleFetchSave(id) {
     setLoading(true);
+    setSave(null);
+
     try {
       const [saveData, allData] = await Promise.all([
         fetchSave(id),
         fetchAllSaves(),
       ]);
+
       setSave(saveData.save);
       setAllSaves(allData.saves || []);
       return saveData;
@@ -65,7 +68,7 @@ export const useSaves = () => {
 
   async function handleUpdateNote(id, note) {
     try {
-      const data = await updateNote(id, { note });
+      const data = await updateNote(id, note);
       setSave((prev) => ({ ...prev, note: data.save.note }));
       toast.success("Note saved");
     } catch (error) {

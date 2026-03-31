@@ -33,7 +33,7 @@ export const updateTags = async (id, tags) => {
 };
 
 export const updateNote = async (id, note) => {
-  const response = await api.patch(`/api/saves/${id}/update-note`, { note });
+  const response = await api.patch(`/api/saves/${id}/update-note`, note);
   return response.data;
 };
 

@@ -12,7 +12,8 @@ import { toast } from "react-toastify";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { actionLoading, setActionLoading, user, setUser } = context;
+  const { actionLoading, authLoading, setActionLoading, user, setUser } =
+    context;
 
   async function handleRegister({ email, username, password }) {
     setActionLoading(true);
@@ -100,6 +101,7 @@ export const useAuth = () => {
 
   return {
     actionLoading,
+    authLoading,
     user,
     handleRegister,
     handleLogin,

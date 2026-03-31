@@ -29,7 +29,7 @@ const TYPE_CONFIG = {
 };
 
 export default function CollectionDetail() {
-  const { id } = useParams();
+  const { collectionId } = useParams();
   const navigate = useNavigate();
   const {
     loading,
@@ -46,7 +46,7 @@ export default function CollectionDetail() {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   // Derive the current collection from context instead of a separate fetch
-  const collection = collections.find((c) => c._id === id) ?? null;
+  const collection = collections.find((c) => c._id === collectionId) ?? null;
 
   // Fetch collections if not yet loaded, then fetch saves for this collection
   useEffect(() => {
@@ -54,11 +54,11 @@ export default function CollectionDetail() {
   }, []);
 
   useEffect(() => {
-    if (!id) return;
-    handleGetSavesInCollection(id).then((data) => {
+    if (!collectionId) return;
+    handleGetSavesInCollection(collectionId).then((data) => {
       if (data) setSaves(data.saves || []);
     });
-  }, [id]);
+  }, [collectionId]);
 
   // Reset confirm-delete state when user clicks away
   useEffect(() => {
@@ -72,17 +72,17 @@ export default function CollectionDetail() {
       setConfirmDelete(true);
       return;
     }
-    await handleDeleteCollection(id);
+    await handleDeleteCollection(collectionId);
     navigate("/collections");
   }
 
   async function onUpdateCollection(name, description) {
-    await handleUpdateCollection(id, name, description);
+    await handleUpdateCollection(collectionId, name, description);
     setEditModalOpen(false);
   }
 
   async function onRemoveSave(saveId) {
-    await handleRemoveSaveFromCollection(id, saveId);
+    await handleRemoveSaveFromCollection(collectionId, saveId);
     setSaves((prev) => prev.filter((s) => s._id !== saveId));
   }
 

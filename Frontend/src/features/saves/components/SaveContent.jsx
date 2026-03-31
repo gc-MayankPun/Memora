@@ -13,10 +13,12 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
   const [highlights, setHighlights] = useState([]);
 
   useEffect(() => {
+    if (!save?._id) return;
+
     getHighlights(save._id)
       .then((data) => setHighlights(data.highlights || []))
       .catch(() => setHighlights([]));
-  }, [save._id]);
+  }, [save?._id]);
 
   const handleDeleteHighlight = async (highlightId) => {
     await deleteHighlight(save._id, highlightId);

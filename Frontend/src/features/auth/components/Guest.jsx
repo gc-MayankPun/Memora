@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 const Guest = ({ children }) => {
   const { authLoading, user } = useAuth();
 
-  if (authLoading) return <div>Loading...</div>;
+  if (authLoading) return null;
   if (user) return <Navigate to="/" replace />;
 
   return children;

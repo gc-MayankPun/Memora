@@ -7,7 +7,7 @@ import RelatedSaves from "../components/RelatedSaves";
 import "../styles/saves.scss";
 
 export default function Saves() {
-  const { id } = useParams();
+  const { saveId } = useParams();
   const navigate = useNavigate();
   const {
     save,
@@ -21,11 +21,13 @@ export default function Saves() {
   } = useSaves();
 
   useEffect(() => {
-    handleFetchSave(id);
-  }, [id]);
+    if (!saveId) return;
+
+    handleFetchSave(saveId);
+  }, [saveId]);
 
   const onDelete = async () => {
-    await handleDeleteSave(id);
+    await handleDeleteSave(saveId);
     navigate("/");
   };
 
@@ -42,7 +44,7 @@ export default function Saves() {
     );
   }
 
-  if (!save) {
+  if (!loading && !save) {
     return (
       <div className="saves-page__error">
         <span className="saves-page__error-icon">◈</span>
@@ -60,15 +62,15 @@ export default function Saves() {
         save={save}
         onBack={() => navigate("/")}
         onDelete={onDelete}
-        onToggleFavorite={() => handleToggleFavorite(id, save.isFavorite)}
+        onToggleFavorite={() => handleToggleFavorite(saveId, save.isFavorite)}
       />
       <div className="saves-page__body">
         {/* Main content */}
         <div className="saves-page__main">
           <SaveContent
             save={save}
-            onUpdateTags={(tags) => handleUpdateTags(id, tags)}
-            onUpdateNote={(note) => handleUpdateNote(id, note)}
+            onUpdateTags={(tags) => handleUpdateTags(saveId, tags)}
+            onUpdateNote={(note) => handleUpdateNote(saveId, note)}
           />
           {/* Related — bottom on mobile */}
           <div className="saves-page__related-bottom">

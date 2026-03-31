@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
     ),
   }, 
   {
-    path: "/saves/:id",
+    path: "/saves/:saveId",
     element: (
       <Protected>
         <Saves />
@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
   },
 
   {
-    path: "/collections/:id",
+    path: "/collections/:collectionId",
     element: (
       <Protected>
         <CollectionDetail />

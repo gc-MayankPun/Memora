@@ -5,6 +5,7 @@ import { ThemeProvider } from "./theme.context";
 import { AuthProvider } from "../features/auth/auth.context";
 import { SavesProvider } from "../features/saves/saves.context";
 import { CollectionProvider } from "../features/collections/collection.context";
+import AppGate from "./AppGate";
 
 const App = () => {
   return (
@@ -12,7 +13,9 @@ const App = () => {
       <ThemeProvider>
         <SavesProvider>
           <CollectionProvider>
-            <RouterProvider router={router} />
+            <AppGate>
+              <RouterProvider router={router} />
+            </AppGate>
             <ToastContainer
               position="top-right"
               autoClose={3000}
