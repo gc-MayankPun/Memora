@@ -19,7 +19,7 @@ transporter
     console.error("Email transporter verification failed:", err);
   });
 
-export async function sendNodeEmail({ to, subject, html, text }) {
+export async function sendEmail({ to, subject, html, text }) {
   const mailOptions = {
     from: `Memora <${process.env.BREVO_SMTP_USER}>`,
     to,
