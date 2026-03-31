@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDashboard } from "../hooks/useDashboard";
+import { useAuth } from "../../auth/hooks/useAuth";
 import Navbar from "../components/Navbar";
 import FilterBar from "../components/FilterBar";
 import SaveCard from "../components/SaveCard";
 import "../styles/dashboard.scss";
-import { Link } from "react-router";
 
 export default function Dashboard() {
   const {
@@ -14,6 +14,8 @@ export default function Dashboard() {
     saves,
     loading,
   } = useDashboard();
+  const { user } = useAuth();
+
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -45,6 +47,7 @@ export default function Dashboard() {
       <Navbar
         onSearch={setSearchQuery}
         totalCount={saves.length}
+        user={user}
         handleLogout={handleLogout}
         handleDeleteAccount={handleDeleteAccount}
       />

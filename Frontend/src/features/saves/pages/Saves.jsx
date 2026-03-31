@@ -22,7 +22,7 @@ export default function Saves() {
 
   useEffect(() => {
     handleFetchSave(id);
-  }, [id, handleFetchSave]);
+  }, [id]);
 
   const onDelete = async () => {
     await handleDeleteSave(id);
