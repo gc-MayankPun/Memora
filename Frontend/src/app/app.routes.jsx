@@ -11,20 +11,34 @@ import VerifyEmail from "../features/auth/pages/VerifyEmail";
 import { CollectionProvider } from "../features/collections/collection.context";
 import Collections from "../features/collections/pages/Collections";
 import CollectionDetail from "../features/collections/pages/CollectionDetail";
+import Guest from "../features/auth/components/Guest";
+import VerifyEmailGuard from "../features/auth/components/VerifyEmailGuard";
 
 export const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <Guest>
+        <Login />
+      </Guest>
+    ),
   },
   {
     path: "/register",
-    element: <Register />,
+    element: (
+      <Guest>
+        <Register />
+      </Guest>
+    ),
   },
 
   {
     path: "/verify-email",
-    element: <VerifyEmail />,
+    element: (
+      <VerifyEmailGuard>
+        <VerifyEmail />
+      </VerifyEmailGuard>
+    ),
   },
   {
     path: "/",

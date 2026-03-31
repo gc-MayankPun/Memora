@@ -8,7 +8,7 @@ import { useAuth } from "../hooks/useAuth";
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const { loading, handleResendVerification } = useAuth();
-  const email = localStorage.getItem("pendingEmail");
+  const email = sessionStorage.getItem("pendingEmail");
 
   const [resent, setResent] = useState(false);
   const [cooldown, setCooldown] = useState(false);

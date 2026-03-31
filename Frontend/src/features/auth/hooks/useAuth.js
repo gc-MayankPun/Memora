@@ -16,8 +16,8 @@ export const useAuth = () => {
     setLoading(true);
     try {
       const data = await register({ email, username, password });
-      toast.success(data.message);
-      localStorage.setItem("pendingEmail", email);
+      toast.success(data.message); 
+      sessionStorage.setItem("pendingEmail", email);
 
       return data;
     } catch (error) {
@@ -33,7 +33,7 @@ export const useAuth = () => {
       const data = await login({ username, password });
       toast.success(data.message);
       setUser(data.user);
-      localStorage.removeItem("pendingEmail");
+      sessionStorage.removeItem("pendingEmail");
 
       return data;
     } catch (error) { 
