@@ -14,6 +14,7 @@ import { cookieOptions } from "../utils/constants.js";
 
 // Services
 import { sendEmail } from "../services/mail.service.js";
+import { sendNodeEmail } from "../services/nodemail.service.js";
 
 export async function register(req, res) {
   const { username, email, password } = req.body;
@@ -42,11 +43,28 @@ export async function register(req, res) {
     process.env.JWT_SECRET,
   );
 
-  await sendEmail({
-    to: email,
-    subject: "Welcome to Memora!",
-    html: emailHTML(username, emailVerificationToken),
-  });
+  try {
+    if (process.env.ENVIRONMENT === "dev") {
+      await sendNodeEmail({
+        to: email,
+        subject: "Welcome to Memora!",
+        html: emailHTML(username, emailVerificationToken),
+      });
+    } else {
+      await sendEmail({
+        to: email,
+        subject: "Welcome to Memora!",
+        html: emailHTML(username, emailVerificationToken),
+      });
+    }
+  } catch (err) {
+    // User created but email failed, delete the user so they can try again
+    await userModel.findByIdAndDelete(user._id);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to send verification email. Please try again.",
+    });
+  }
 
   res.status(201).json({
     message: "User registered successfully",
@@ -223,11 +241,26 @@ export async function resendVerificationEmail(req, res) {
       process.env.JWT_SECRET,
     );
 
-    await sendEmail({
-      to: user.email,
-      subject: "Memora - Email Verification",
-      html: emailHTML(user.username, emailVerificationToken),
-    });
+    try {
+      if (process.env.ENVIRONMENT === "dev") {
+        await sendNodeEmail({
+          to: user.email,
+          subject: "Memora - Email Verification",
+          html: emailHTML(user.username, emailVerificationToken),
+        });
+      } else {
+        await sendEmail({
+          to: user.email,
+          subject: "Memora - Email Verification",
+          html: emailHTML(user.username, emailVerificationToken),
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email. Please try again.",
+      });
+    }
 
     res.status(200).json({
       success: true,
