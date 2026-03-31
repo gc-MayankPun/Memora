@@ -22,8 +22,11 @@ const collectionSavesSchema = new mongoose.Schema(
 );
 
 collectionSavesSchema.index({ collectionId: 1 });
-collectionSavesSchema.index({ saveId: 1 });
-collectionSavesSchema.index({ collectionId: 1, saveId: 1 }, { unique: true });
+collectionSavesSchema.index({ saveId: 1 }); 
+collectionSavesSchema.index(
+  { collectionId: 1, saveId: 1, userId: 1 },
+  { unique: true },
+);
 
 const collectionSavesModel = mongoose.model(
   "collectionSaves",
