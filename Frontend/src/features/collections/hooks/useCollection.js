@@ -77,6 +77,13 @@ export const useCollection = () => {
   async function handleAddSaveToCollection(collectionId, saveId) {
     try {
       const data = await addSaveToCollection(collectionId, saveId);
+      setCollections((prev) =>
+        prev.map((c) =>
+          c._id === collectionId
+            ? { ...c, saveCount: (c.saveCount || 0) + 1 }
+            : c,
+        ),
+      );
       toast.success("Added to collection");
       return data;
     } catch (error) {
@@ -88,6 +95,13 @@ export const useCollection = () => {
     try {
       await removeSaveFromCollection(collectionId, saveId);
       toast.success("Removed from collection");
+      setCollections((prev) =>
+        prev.map((c) =>
+          c._id === collectionId
+            ? { ...c, saveCount: Math.max(0, (c.saveCount || 0) - 1) }
+            : c,
+        ),
+      );
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }

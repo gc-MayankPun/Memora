@@ -86,7 +86,7 @@ export default function CollectionDetail() {
     setSaves((prev) => prev.filter((s) => s._id !== saveId));
   }
 
-  if (loading && !collection) {
+  if (loading || !collection) {
     return (
       <div className="collection-detail__loading">
         <div className="collection-detail__loading-dots">
