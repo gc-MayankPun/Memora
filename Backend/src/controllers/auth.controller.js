@@ -43,6 +43,7 @@ export async function register(req, res) {
       email: user.email,
     },
     process.env.JWT_SECRET,
+    { expiresIn: "15m" },
   );
 
   try {
@@ -233,6 +234,7 @@ export async function resendVerificationEmail(req, res) {
         email: user.email,
       },
       process.env.JWT_SECRET,
+      { expiresIn: "15m" },
     );
 
     try {

@@ -17,13 +17,6 @@ export async function createSave(req, res) {
     const { title, url, note, tags } = req.body;
     const userId = req.user.id;
 
-    if (!title || !url) {
-      return res.status(400).json({
-        success: false,
-        message: "Title and URL are required",
-      });
-    }
-
     const isSaveExists = await saveModel.findOne({ url, userId });
     if (isSaveExists) {
       return res.status(400).json({
@@ -76,22 +69,16 @@ export async function createSave(req, res) {
 
 export async function updateSave(req, res) {
   try {
-    const { title, url, note, tags } = req.body;
+    const { title, note, tags } = req.body;
+    const { saveId } = req.params;
     const userId = req.user.id;
-
-    if (!title || !url) {
-      return res.status(400).json({
-        success: false,
-        message: "Title and URL are required",
-      });
-    }
 
     const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
 
     const updatedTags = Array.from(new Set([...(tags || [])].map(normalize)));
 
     const saveDoc = await saveModel.findOneAndUpdate(
-      { _id: req.params.id, userId },
+      { _id: saveId, userId },
       {
         title,
         note,
@@ -126,13 +113,6 @@ export async function checkSave(req, res) {
     const { url } = req.query;
     const userId = req.user.id;
 
-    if (!url) {
-      return res.status(400).json({
-        success: false,
-        message: "URL is required",
-      });
-    }
-
     const saveDoc = await saveModel.findOne({ url, userId });
     if (!saveDoc) {
       return res.status(200).json({
@@ -162,8 +142,8 @@ export async function checkSave(req, res) {
 
 export async function deleteSave(req, res) {
   try {
+    const { saveId } = req.params;
     const userId = req.user.id;
-    const saveId = req.params.id;
 
     const saveDoc = await saveModel.findOneAndDelete({ _id: saveId, userId });
     if (!saveDoc) {
@@ -173,11 +153,11 @@ export async function deleteSave(req, res) {
       });
     }
 
-    const highlightEntries = await highlightSaveModel.find({ saveId });
+    const highlightEntries = await highlightSaveModel.find({ saveId, userId });
     const highlightIds = highlightEntries.map((e) => e.highlightId);
-    await highlightSaveModel.deleteMany({ saveId });
+    await highlightSaveModel.deleteMany({ saveId, userId });
     await highlightModel.deleteMany({ _id: { $in: highlightIds } });
-    await collectionSavesModel.deleteMany({ saveId });
+    await collectionSavesModel.deleteMany({ saveId, userId });
 
     res.status(200).json({
       success: true,
@@ -213,10 +193,12 @@ export async function getSaves(req, res) {
 }
 
 export async function getSave(req, res) {
+  const { saveId } = req.params;
+
   try {
     const userId = req.user.id;
     const saveDoc = await saveModel.findOneAndUpdate(
-      { _id: req.params.id, userId },
+      { _id: saveId, userId },
       { lastViewedAt: new Date() },
       { new: true },
     );
@@ -244,11 +226,12 @@ export async function getSave(req, res) {
 
 export async function updateFavorite(req, res) {
   const { isFavorite } = req.body;
+  const { saveId } = req.params;
   const userId = req.user.id;
 
   try {
     const saveDoc = await saveModel.findOne({
-      _id: req.params.id,
+      _id: saveId,
       userId,
     });
 
@@ -257,12 +240,6 @@ export async function updateFavorite(req, res) {
         success: false,
         message: "Save not found",
       });
-    }
-
-    if (isFavorite === undefined) {
-      return res
-        .status(400)
-        .json({ success: false, message: "isFavorite is required" });
     }
 
     saveDoc.isFavorite = isFavorite;
@@ -283,12 +260,13 @@ export async function updateFavorite(req, res) {
 }
 
 export async function updateTags(req, res) {
-  const { tags } = req.body;
+  const { saveId } = req.params;
   const userId = req.user.id;
+  const { tags } = req.body;
 
   try {
     const saveDoc = await saveModel.findOne({
-      _id: req.params.id,
+      _id: saveId,
       userId,
     });
 
@@ -317,12 +295,13 @@ export async function updateTags(req, res) {
 }
 
 export async function updateNote(req, res) {
-  const { note } = req.body;
+  const { saveId } = req.params;
   const userId = req.user.id;
+  const { note } = req.body;
 
   try {
     const saveDoc = await saveModel.findOne({
-      _id: req.params.id,
+      _id: saveId,
       userId,
     });
 

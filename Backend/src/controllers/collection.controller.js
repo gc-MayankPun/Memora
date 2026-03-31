@@ -6,13 +6,6 @@ export async function createCollection(req, res) {
     const { name, description } = req.body;
     const userId = req.user.id;
 
-    if (!name) {
-      return res.status(400).json({
-        success: false,
-        message: "Collection name is required",
-      });
-    }
-
     const isCollectionExists = await collectionModel.findOne({ name, userId });
     if (isCollectionExists) {
       return res.status(400).json({
@@ -146,8 +139,8 @@ export async function deleteCollection(req, res) {
       });
     }
 
-    await collectionModel.deleteOne({ _id: collectionId });
     await collectionSavesModel.deleteMany({ collectionId });
+    await collectionModel.deleteOne({ _id: collectionId });
 
     res.status(200).json({
       success: true,
@@ -167,13 +160,6 @@ export async function addSaveToCollection(req, res) {
     const { collectionId } = req.params;
     const { saveId } = req.body;
     const userId = req.user.id;
-
-    if (!saveId) {
-      return res.status(400).json({
-        success: false,
-        message: "Save ID is required",
-      });
-    }
 
     const isAlreadyAdded = await collectionSavesModel.findOne({
       collectionId,
