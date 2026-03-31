@@ -8,6 +8,7 @@ The Memora extension lets you save any webpage to your Memora account directly f
 
 - Google Chrome browser
 - A Memora account ([Sign up here](https://memora-01wh.onrender.com/register))
+- (Brave users only) Turn off Brave Shields for the Highlight feature to work properly.
 
 ---
 
