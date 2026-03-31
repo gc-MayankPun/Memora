@@ -1,8 +1,9 @@
 const APP_URL = "https://memora-01wh.onrender.com";
 const API_URL = "https://memora-01wh.onrender.com";
+let existingSaveId = null;
 let update = false;
 
-// ── Screen helpers ──
+// Screen helpers
 function showScreen(name) {
   ["save", "saved", "exists", "login"].forEach((s) => {
     document.getElementById(`screen-${s}`).classList.add("hidden");
@@ -10,7 +11,7 @@ function showScreen(name) {
   document.getElementById(`screen-${name}`).classList.remove("hidden");
 }
 
-// ── Open app buttons ──
+// Open app buttons
 ["open-app", "open-app-2", "open-app-3"].forEach((id) => {
   const el = document.getElementById(id);
   if (el) {
@@ -21,13 +22,13 @@ function showScreen(name) {
   }
 });
 
-// ── Open login button ──
+// Open login button
 document.getElementById("open-login-btn").addEventListener("click", (e) => {
   e.preventDefault();
   chrome.tabs.create({ url: `${APP_URL}/login` });
 });
 
-// ── On popup open ──
+// On popup open
 chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
   const tab = tabs[0];
   const url = tab.url;
@@ -51,6 +52,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
     const data = await res.json();
 
     if (data.exists) {
+      existingSaveId = data.id;
+
       document.getElementById("saved-ago-text").textContent =
         `You saved this ${data.savedAgo || "before"}`;
 
@@ -71,7 +74,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
   showScreen("save");
 });
 
-// ── Save button ──
+// Save button
 document.getElementById("save-btn").addEventListener("click", async () => {
   const title = document.getElementById("page-title").value.trim();
   const url = document.getElementById("page-url").value.trim();
@@ -90,14 +93,16 @@ document.getElementById("save-btn").addEventListener("click", async () => {
 
   try {
     const endpoint = update
-      ? `${API_URL}/api/saves/update`
+      ? `${API_URL}/api/saves/${existingSaveId}/update`
       : `${API_URL}/api/saves`;
 
     const res = await fetch(endpoint, {
       method: update ? "PATCH" : "POST",
       credentials: "include", // ← auth cookie
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, url, note, tags }),
+      body: JSON.stringify(
+        update ? { title, note, tags } : { title, url, note, tags },
+      ),
     });
 
     // 401 = session expired mid-session
@@ -127,11 +132,16 @@ document.getElementById("save-btn").addEventListener("click", async () => {
     btn.disabled = false;
     btn.textContent = "Save to Memora";
     document.getElementById("error-msg").classList.remove("hidden");
+  } finally {
+    update = false;
+    existingSaveId = null;
   }
 });
 
-// ── Save again anyway ──
+// Save again anyway
 document.getElementById("save-anyway-btn").addEventListener("click", () => {
+  if (!existingSaveId) return;
+
   showScreen("save");
   update = true;
 });
