@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiSparkles } from "react-icons/hi2";
 import { IoClose } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import { PiNotePencilLight } from "react-icons/pi";
 import "../styles/save-content.scss";
 import AddToCollection from "../../collections/components/AddToCollection";
+import { getHighlights, deleteHighlight } from "../services/highlight.api";
+import { PiQuotesFill } from "react-icons/pi";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
+  const [highlights, setHighlights] = useState([]);
+
+  useEffect(() => {
+    getHighlights(save._id)
+      .then((data) => setHighlights(data.highlights || []))
+      .catch(() => setHighlights([]));
+  }, [save._id]);
+
+  const handleDeleteHighlight = async (highlightId) => {
+    await deleteHighlight(save._id, highlightId);
+    setHighlights((prev) => prev.filter((h) => h._id !== highlightId));
+  };
+
   const [tags, setTags] = useState(save.tags || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputVal, setInputVal] = useState("");
@@ -102,6 +118,36 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
           </div>
         )}
       </section>
+
+      {/* Highlights */}
+      {highlights.length > 0 && (
+        <section className="save-content__section">
+          <div className="save-content__section-label">
+            <PiQuotesFill className="save-content__highlight-icon" />
+            Highlights
+            <span className="save-content__highlight-count">
+              {highlights.length}
+            </span>
+          </div>
+          <div className="save-content__highlights">
+            {highlights.map((h) => (
+              <div key={h._id} className="save-content__highlight">
+                <span className="save-content__highlight-quote">❝</span>
+                <p className="save-content__highlight-text">
+                  {h.highlightedText}
+                </p>
+                <button
+                  className="save-content__highlight-delete"
+                  onClick={() => handleDeleteHighlight(h._id)}
+                  aria-label="Delete highlight"
+                >
+                  <RiDeleteBin6Line />
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* AI Topics */}
       <section className="save-content__section">
