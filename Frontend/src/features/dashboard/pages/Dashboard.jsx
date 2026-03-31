@@ -7,14 +7,8 @@ import SaveCard from "../components/SaveCard";
 import "../styles/dashboard.scss";
 
 export default function Dashboard() {
-  const {
-    handleFetchAllSaves,
-    handleLogout,
-    handleDeleteAccount,
-    saves,
-    loading,
-  } = useDashboard();
-  const { user } = useAuth();
+  const { handleFetchAllSaves, saves, loading } = useDashboard();
+  const { user, handleLogout, handleDeleteAccount } = useAuth();
 
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");

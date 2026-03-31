@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { loading, handleRegister } = useAuth();
+  const { actionLoading, handleRegister } = useAuth();
 
   const [form, setForm] = useState({ username: "", email: "", password: "" });
 
@@ -91,9 +91,9 @@ export default function Register() {
             type="submit"
             className="auth-card__btn"
             style={{ "--i": 3 }}
-            disabled={loading}
+            disabled={actionLoading}
           >
-            {loading ? "Creating account..." : "Create account"}
+            {actionLoading ? "Creating account..." : "Create account"}
           </button>
         </form>
 

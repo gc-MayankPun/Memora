@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { loading, handleLogin } = useAuth();
+  const { actionLoading, handleLogin } = useAuth();
 
   const [form, setForm] = useState({ username: "", password: "" });
 
@@ -14,7 +14,7 @@ export default function Login() {
   };
 
   const submitForm = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const result = await handleLogin(form);
     if (result?.success) navigate("/");
   };
@@ -72,9 +72,9 @@ export default function Login() {
             type="submit"
             className="auth-card__btn"
             style={{ "--i": 3 }}
-            disabled={loading}
+            disabled={actionLoading}
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {actionLoading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 

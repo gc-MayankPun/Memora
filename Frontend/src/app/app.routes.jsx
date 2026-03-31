@@ -8,13 +8,24 @@ import Saves from "../features/saves/pages/Saves";
 import Graph from "../features/graph/pages/Graph";
 import Login from "../features/auth/pages/Login";
 import VerifyEmail from "../features/auth/pages/VerifyEmail";
-import { CollectionProvider } from "../features/collections/collection.context";
 import Collections from "../features/collections/pages/Collections";
 import CollectionDetail from "../features/collections/pages/CollectionDetail";
 import Guest from "../features/auth/components/Guest";
 import VerifyEmailGuard from "../features/auth/components/VerifyEmailGuard";
+import ErrorPage from "./ErrorPage";
 
 export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Protected>
+        <DashboardProvider>
+          <Dashboard />
+        </DashboardProvider>
+      </Protected>
+    ),
+    errorElement: <ErrorPage />, 
+  },
   {
     path: "/login",
     element: (
@@ -39,17 +50,7 @@ export const router = createBrowserRouter([
         <VerifyEmail />
       </VerifyEmailGuard>
     ),
-  },
-  {
-    path: "/",
-    element: (
-      <Protected>
-        <DashboardProvider>
-          <Dashboard />
-        </DashboardProvider>
-      </Protected>
-    ),
-  },
+  }, 
   {
     path: "/saves/:id",
     element: (
@@ -79,9 +80,7 @@ export const router = createBrowserRouter([
     path: "/collections/:id",
     element: (
       <Protected>
-        <CollectionProvider>
-          <CollectionDetail />
-        </CollectionProvider>
+        <CollectionDetail />
       </Protected>
     ),
   },

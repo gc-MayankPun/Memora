@@ -29,6 +29,7 @@ const authRouter = Router();
 authRouter.post("/register", registerLimiter, registerValidator, register);
 authRouter.post("/login", loginLimiter, loginValidator, login);
 authRouter.get("/verify-email", verifyEmailLimiter, verifyEmail);
+authRouter.post("/logout", logoutLimiter, logout);
 authRouter.post(
   "/resend-verification",
   resendVerificationLimiter,
@@ -38,7 +39,6 @@ authRouter.post(
 
 // Protected Routes
 authRouter.get("/get-me", authUser, getMe);
-authRouter.post("/logout", authUser, logoutLimiter, logout);
 authRouter.delete(
   "/delete-account",
   authUser,

@@ -4,19 +4,19 @@ import { getMe } from "./services/auth.api";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function initAuth() {
-      try { 
-        if(user) return;
+      try {
         const data = await getMe();
-        setUser(data.user); 
+        setUser(data.user);
       } catch (err) {
         setUser(null);
       } finally {
-        setLoading(false);
+        setAuthLoading(false);
       }
     }
 
@@ -24,7 +24,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loading, setLoading, user, setUser }}>
+    <AuthContext.Provider
+      value={{
+        actionLoading,
+        setActionLoading,
+        authLoading,
+        user,
+        setUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
