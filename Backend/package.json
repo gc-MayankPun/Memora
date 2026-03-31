@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@getbrevo/brevo": "^5.0.3",
     "@langchain/mistralai": "^1.0.7",
     "axios": "^1.14.0",
     "bcryptjs": "^3.0.3",
@@ -25,7 +26,6 @@
     "langchain": "^1.2.37",
     "mongoose": "^9.3.3",
     "morgan": "^1.10.1",
-    "node-fetch": "^3.3.2",
-    "nodemailer": "^8.0.4"
+    "node-fetch": "^3.3.2"
   }
 }
