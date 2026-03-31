@@ -1,12 +1,5 @@
-import { body, validationResult } from "express-validator";
-
-export function validate(req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-}
+import { validate } from "../utils/validate.js";
+import { body } from "express-validator";
 
 export const registerValidator = [
   body("username")
@@ -16,7 +9,7 @@ export const registerValidator = [
     .withMessage("Username is required")
     .isLength({ min: 3, max: 30 })
     .withMessage("Username must be between 3 and 30 characters")
-    .matches(/^[a-zA-z0-9_]+$/)
+    .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage("Username can only contain letters, numbers and underscores"),
 
   body("email")
@@ -44,10 +37,15 @@ export const loginValidator = [
     .withMessage("Username is required")
     .isLength({ min: 3, max: 30 })
     .withMessage("Username must be between 3 and 30 characters")
-    .matches(/^[a-zA-z0-9_]+$/)
+    .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage("Username can only contain letters, numbers and underscores"),
 
   body("password").notEmpty().withMessage("Password is required"),
 
+  validate,
+];
+
+export const resendVerificationValidator = [
+  body("email").isEmail().withMessage("Valid email required"),
   validate,
 ];
