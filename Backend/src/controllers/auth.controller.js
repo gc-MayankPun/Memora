@@ -1,9 +1,19 @@
-import { sendEmail } from "../services/mail.service.js";
-import userModel from "../models/user.model.js";
-import saveModel from "../models/saves.model.js";
-import { emailHTML, verifyEmailHTML } from "../utils/util.js";
 import jwt from "jsonwebtoken";
+
+// Models
+import collectionSavesModel from "../models/collectionSaves.model.js";
+import highlightSaveModel from "../models/highlightSave.model.js";
+import collectionModel from "../models/collections.model.js";
+import highlightModel from "../models/highlight.model.js";
+import saveModel from "../models/saves.model.js";
+import userModel from "../models/user.model.js";
+
+// Utils
+import { emailHTML, verifyEmailHTML } from "../utils/util.js";
 import { cookieOptions } from "../utils/constants.js";
+
+// Services
+import { sendEmail } from "../services/mail.service.js";
 
 export async function register(req, res) {
   const { username, email, password } = req.body;
@@ -108,6 +118,10 @@ export async function deleteUser(req, res) {
   try {
     const userId = req.user.id;
 
+    await highlightSaveModel.deleteMany({ userId });
+    await highlightModel.deleteMany({ userId });
+    await collectionSavesModel.deleteMany({ userId });
+    await collectionModel.deleteMany({ userId });
     await saveModel.deleteMany({ userId });
 
     await userModel.findByIdAndDelete(userId);

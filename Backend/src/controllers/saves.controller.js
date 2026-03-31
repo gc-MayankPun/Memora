@@ -1,8 +1,16 @@
+// Models
+import collectionSavesModel from "../models/collectionSaves.model.js";
+import highlightSaveModel from "../models/highlightSave.model.js";
+import highlightModel from "../models/highlight.model.js";
+import saveModel from "../models/saves.model.js";
+
+// Services
+import { generateSummaryAndTopics } from "../services/ai.service.js";
 import { scrapeMetatags } from "../services/scraper.service.js";
 import { detectType } from "../services/detector.service.js";
-import saveModel from "../models/saves.model.js";
+
+// Utils
 import { getTimeAgo } from "../utils/util.js";
-import { generateSummaryAndTopics } from "../services/ai.service.js";
 
 export async function createSave(req, res) {
   try {
@@ -165,6 +173,12 @@ export async function deleteSave(req, res) {
       });
     }
 
+    const highlightEntries = await highlightSaveModel.find({ saveId });
+    const highlightIds = highlightEntries.map((e) => e.highlightId);
+    await highlightSaveModel.deleteMany({ saveId });
+    await highlightModel.deleteMany({ _id: { $in: highlightIds } });
+    await collectionSavesModel.deleteMany({ saveId });
+
     res.status(200).json({
       success: true,
       message: "Save deleted successfully",
@@ -245,10 +259,13 @@ export async function updateFavorite(req, res) {
       });
     }
 
-    if (isFavorite !== undefined) {
-      saveDoc.isFavorite = isFavorite;
+    if (isFavorite === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, message: "isFavorite is required" });
     }
 
+    saveDoc.isFavorite = isFavorite;
     await saveDoc.save();
 
     res.status(200).json({

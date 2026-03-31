@@ -1,12 +1,15 @@
-import collectionRouter from "./routes/collection.routes.js";
-import savesRouter from "./routes/saves.routes.js";
-import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import path from "path";
+
+// Routes
+import collectionRouter from "./routes/collection.routes.js";
+import highlightRouter from "./routes/highlight.routes.js";
+import savesRouter from "./routes/saves.routes.js";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -40,6 +43,7 @@ app.use(
 
 app.use("/api/saves", savesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/highlights", highlightRouter);
 app.use("/api/collections", collectionRouter);
 
 app.use("/{*path}", (req, res) => {
