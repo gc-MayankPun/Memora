@@ -26,7 +26,6 @@
     "mongoose": "^9.3.3",
     "morgan": "^1.10.1",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^8.0.4",
-    "resend": "^6.10.0"
+    "nodemailer": "^8.0.4"
   }
 }

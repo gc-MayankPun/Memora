@@ -1,26 +1,35 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASS,
+  },
+});
 
-export async function sendEmail({ to, subject, html, text }) {
-  try {
-    const { data, error } = await resend.emails.send({
-      from: "Memora <onboarding@resend.dev>",
-      to,
-      subject,
-      html,
-      text,
-    });
+transporter
+  .verify()
+  .then(() => {
+    console.log("Email transporter is ready to send emails");
+  })
+  .catch((err) => {
+    console.error("Email transporter verification failed:", err);
+  });
 
-    if (error) {
-      console.error("Email send error: ", error);
-      throw new Error(error.message);
-    }
+export async function sendNodeEmail({ to, subject, html, text }) {
+  const mailOptions = {
+    from: `Memora <${process.env.BREVO_SMTP_USER}>`,
+    to,
+    subject,
+    html,
+    text,
+  };
 
-    console.log("Email sent:", data);
-    return data;
-  } catch (err) {
-    console.error("Failed to send email: ", err.message);
-    throw err;
-  }
+  const details = await transporter.sendMail(mailOptions); 
+  return details;
 }
+
+export default transporter;

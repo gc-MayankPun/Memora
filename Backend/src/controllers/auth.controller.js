@@ -10,11 +10,13 @@ import userModel from "../models/user.model.js";
 
 // Utils
 import { emailHTML, verifyEmailHTML } from "../utils/util.js";
-import { cookieOptions } from "../utils/constants.js";
+import {
+  cookieOptions,
+  verificationExpirationTime,
+} from "../utils/constants.js";
 
 // Services
 import { sendEmail } from "../services/mail.service.js";
-import { sendNodeEmail } from "../services/nodemail.service.js";
 
 export async function register(req, res) {
   const { username, email, password } = req.body;
@@ -33,7 +35,7 @@ export async function register(req, res) {
     username,
     email,
     password,
-    verificationExpiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 min
+    verificationExpiresAt: verificationExpirationTime,
   });
 
   const emailVerificationToken = jwt.sign(
@@ -44,19 +46,11 @@ export async function register(req, res) {
   );
 
   try {
-    if (process.env.ENVIRONMENT === "dev") {
-      await sendNodeEmail({
-        to: email,
-        subject: "Welcome to Memora!",
-        html: emailHTML(username, emailVerificationToken),
-      });
-    } else {
-      await sendEmail({
-        to: email,
-        subject: "Welcome to Memora!",
-        html: emailHTML(username, emailVerificationToken),
-      });
-    }
+    await sendEmail({
+      to: email,
+      subject: "Welcome to Memora!",
+      html: emailHTML(username, emailVerificationToken),
+    });
   } catch (err) {
     // User created but email failed, delete the user so they can try again
     await userModel.findByIdAndDelete(user._id);
@@ -231,7 +225,7 @@ export async function resendVerificationEmail(req, res) {
       });
     }
 
-    user.verificationExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    user.verificationExpiresAt = verificationExpirationTime;
     await user.save();
 
     const emailVerificationToken = jwt.sign(
@@ -242,19 +236,11 @@ export async function resendVerificationEmail(req, res) {
     );
 
     try {
-      if (process.env.ENVIRONMENT === "dev") {
-        await sendNodeEmail({
-          to: user.email,
-          subject: "Memora - Email Verification",
-          html: emailHTML(user.username, emailVerificationToken),
-        });
-      } else {
-        await sendEmail({
-          to: user.email,
-          subject: "Memora - Email Verification",
-          html: emailHTML(user.username, emailVerificationToken),
-        });
-      }
+      await sendEmail({
+        to: user.email,
+        subject: "Memora - Email Verification",
+        html: emailHTML(user.username, emailVerificationToken),
+      });
     } catch (err) {
       return res.status(500).json({
         success: false,
