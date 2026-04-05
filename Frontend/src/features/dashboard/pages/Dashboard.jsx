@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
+    if (saves.length !== 0) return;
     handleFetchAllSaves();
   }, []);
 

@@ -1,5 +1,5 @@
 import { useAuth } from "../../features/auth/hooks/useAuth";
-import "./app-gate.scss"
+import "../styles/app-gate.scss"
 
 const AppGate = ({ children }) => {
   const { authLoading } = useAuth();

@@ -24,13 +24,19 @@
   &__section-label {
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
     font-size: 10px;
     font-family: $font-body;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-muted);
+
+    &__container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
   }
 
   &__ai-icon {

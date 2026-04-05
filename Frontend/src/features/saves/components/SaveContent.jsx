@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import { PiNotePencilLight } from "react-icons/pi";
 import "../styles/save-content.scss";
+import "../styles/save-btn.scss";
 import AddToCollection from "../../collections/components/AddToCollection";
 import { getHighlights, deleteHighlight } from "../services/highlight.api";
 import { PiQuotesFill } from "react-icons/pi";
@@ -56,6 +57,11 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
     setTagsDirty(false);
   };
 
+  const cancelTags = async () => {
+    setTags(save.tags || []);
+    setTagsDirty(false);
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") addTag();
     if (e.key === "Escape") {
@@ -65,13 +71,34 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
   };
 
   const saveNote = () => {
+    const cleanedNote = normalize(note);
+
+    if (!cleanedNote) return; // prevent empty/whitespace
+
+    if (cleanedNote !== normalize(save.note || "")) {
+      onUpdateNote(cleanedNote);
+    }
+
     setEditingNote(false);
     setNoteDirty(false);
-    if (note !== save.note) onUpdateNote(note);
+  };
+
+  const cancelNote = () => {
+    setNote(save.note || "");
+    setEditingNote(false);
+    setNoteDirty(false);
   };
 
   const handleNoteKeyDown = (e) => {
-    if (e.key === "Escape") saveNote();
+    if (e.key === "Escape") cancelNote();
+  };
+
+  const normalize = (text) => text.trim().replace(/\s+/g, " ");
+  const handleSaveNote = (e) => {
+    const newVal = e.target.value;
+
+    setNote(newVal);
+    setNoteDirty(normalize(newVal) !== normalize(save.note || ""));
   };
 
   return (
@@ -79,8 +106,10 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
       {/* AI Summary */}
       <section className="save-content__section">
         <div className="save-content__section-label">
-          <HiSparkles className="save-content__ai-icon" />
-          AI Summary
+          <div className="save-content__section-label__container">
+            <HiSparkles className="save-content__ai-icon" />
+            AI Summary
+          </div>
         </div>
         <p className="save-content__summary">{save.summary}</p>
       </section>
@@ -88,12 +117,25 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
       {/* Your Note */}
       <section className="save-content__section">
         <div className="save-content__section-label">
-          <PiNotePencilLight className="save-content__note-icon" />
-          Your Note
+          <div className="save-content__section-label__container">
+            <PiNotePencilLight className="save-content__note-icon" />
+            Your Note
+          </div>
           {noteDirty && (
-            <button className="save-content__save-tags" onClick={saveNote}>
-              Save
-            </button>
+            <div className="save-content__btn-container">
+              <button
+                className="save-content__btn-container__btn"
+                onClick={saveNote}
+              >
+                Save
+              </button>
+              <button
+                className="save-content__btn-container__btn"
+                onClick={cancelNote}
+              >
+                Cancel
+              </button>
+            </div>
           )}
         </div>
 
@@ -102,11 +144,7 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
             autoFocus
             className="save-content__note-input"
             value={note}
-            onChange={(e) => {
-              setNote(e.target.value);
-              setNoteDirty(e.target.value !== save.note); // ← mark dirty only if actually changed
-            }}
-            onBlur={saveNote}
+            onChange={handleSaveNote}
             onKeyDown={handleNoteKeyDown}
             placeholder="Why did you save this? What stood out?"
             rows={3}
@@ -125,11 +163,13 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
       {highlights.length > 0 && (
         <section className="save-content__section">
           <div className="save-content__section-label">
-            <PiQuotesFill className="save-content__highlight-icon" />
-            Highlights
-            <span className="save-content__highlight-count">
-              {highlights.length}
-            </span>
+            <div className="save-content__section-label__container">
+              <PiQuotesFill className="save-content__highlight-icon" />
+              Highlights
+              <span className="save-content__highlight-count">
+                {highlights.length}
+              </span>
+            </div>
           </div>
           <div className="save-content__highlights">
             {highlights.map((h) => (
@@ -154,8 +194,10 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
       {/* AI Topics */}
       <section className="save-content__section">
         <div className="save-content__section-label">
-          <HiSparkles className="save-content__ai-icon" />
-          Key Topics
+          <div className="save-content__section-label__container">
+            <HiSparkles className="save-content__ai-icon" />
+            Key Topics
+          </div>
         </div>
         <div className="save-content__topics">
           {save.topics?.map((topic) => (
@@ -171,9 +213,20 @@ export default function SaveContent({ save, onUpdateTags, onUpdateNote }) {
         <div className="save-content__section-label">
           Tags
           {tagsDirty && (
-            <button className="save-content__save-tags" onClick={saveTags}>
-              Save
-            </button>
+            <div className="save-content__btn-container">
+              <button
+                className="save-content__btn-container__btn"
+                onClick={saveTags}
+              >
+                Save
+              </button>
+              <button
+                className="save-content__btn-container__btn"
+                onClick={cancelTags}
+              >
+                Cancel
+              </button>
+            </div>
           )}
         </div>
         <div className="save-content__tags">
