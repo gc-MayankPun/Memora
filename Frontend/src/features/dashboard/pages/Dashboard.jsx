@@ -16,7 +16,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (saves.length !== 0) return;
     handleFetchAllSaves();
-  }, []);
+  }, []); 
 
   const filteredSaves =
     activeFilter === "All"
