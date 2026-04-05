@@ -33,7 +33,12 @@ export const scrapeMetatags = async (url) => {
       $("link[rel='apple-touch-icon']").attr("href") ||
       "";
 
-    const thumbnailRaw = getMetatag("image");
+    const thumbnailRaw =
+      $('meta[property="og:image"]').attr("content") ||
+      $('meta[name="twitter:image"]').attr("content") ||
+      $('meta[property="og:image:url"]').attr("content") ||
+      $('meta[property="og:image:secure_url"]').attr("content") ||
+      "";
 
     const favicon = faviconRaw ? toAbsoluteUrl(url, faviconRaw) : "";
     const thumbnail = thumbnailRaw ? toAbsoluteUrl(url, thumbnailRaw) : "";

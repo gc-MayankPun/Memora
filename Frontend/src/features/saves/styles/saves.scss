@@ -1,11 +1,11 @@
-@use "../../../app/variables" as *;
+@use "../../../app/styles/variables" as *;
 
 .saves-page {
   min-height: 100vh;
   background: var(--bg-base);
   transition: background 0.3s ease;
 
-  // ── Body layout ───────────────────────────────────────────────────────────
+  // Body layout 
   &__body {
     display: flex;
     align-items: flex-start;
