@@ -5,7 +5,6 @@ import SaveHeader from "../components/SaveHeader";
 import SaveContent from "../components/SaveContent";
 import RelatedSaves from "../components/RelatedSaves";
 import "../styles/saves.scss";
-import { useDashboard } from "../../dashboard/hooks/useDashboard";
 
 export default function Saves() {
   const { saveId } = useParams();
@@ -21,8 +20,6 @@ export default function Saves() {
     handleUpdateNote,
   } = useSaves();
 
-  const { handleFetchAllSaves } = useDashboard();
-
   useEffect(() => {
     if (!saveId) return;
 
@@ -31,7 +28,6 @@ export default function Saves() {
 
   const onDelete = async () => {
     await handleDeleteSave(saveId);
-    await handleFetchAllSaves();
     navigate("/");
   };
 

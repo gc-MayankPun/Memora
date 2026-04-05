@@ -14,6 +14,7 @@ import { DashboardContext } from "../../dashboard/dashboard.context";
 export const useSaves = () => {
   const context = useContext(SaveContext);
   const { setLoading, loading, setSave, save } = context;
+  const dashboardContext = useContext(DashboardContext);
   const [allSaves, setAllSaves] = useState([]);
 
   async function handleFetchSave(id) {
@@ -40,6 +41,12 @@ export const useSaves = () => {
     setLoading(true);
     try {
       const data = await deleteSave(id);
+      // Update dashboard saves
+      if (dashboardContext.saves) {
+        dashboardContext.setSaves(prev => prev.filter(save => save._id !== id));
+      }
+      // Update local allSaves
+      setAllSaves(prev => prev.filter(save => save._id !== id));
       return data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
