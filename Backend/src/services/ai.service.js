@@ -1,8 +1,13 @@
-import { ChatMistralAI } from "@langchain/mistralai";
+import { ChatMistralAI, MistralAIEmbeddings } from "@langchain/mistralai";
 
 const mistralModel = new ChatMistralAI({
   model: "mistral-small-latest",
   apiKey: process.env.MISTRAL_API_KEY,
+});
+
+const embedder = new MistralAIEmbeddings({
+  apiKey: process.env.MISTRAL_API_KEY,
+  model: "mistral-embed",
 });
 
 export async function generateSummaryAndTopics({
@@ -22,8 +27,12 @@ export async function generateSummaryAndTopics({
     Content: "${content}"
 
     Your task:
-    1. Generate a concise summary (max 2 sentences).
-    2. Extract 3-5 relevant topics.
+    1. Generate a concise summary (max 2 sentences). 
+    2. Extract 3-5 relevant topics that capture:
+    - The DOMAIN (e.g., "government policy", "india politics", "fuel prices")
+    - The SUBJECT (e.g., "react hooks", "docker deployment")
+    - The INTENT (e.g., "tutorial", "news", "analysis")
+    Keep topics as 1-3 descriptive words.
     3. Optionally, suggest AI-generated tags to enhance user-provided tags.
 
     Guidelines:
@@ -54,4 +63,15 @@ export async function generateSummaryAndTopics({
   } catch {
     return { summary: "", topics: [], aiTags: [] };
   }
+}
+
+export async function generateVectorFromData({ summary, title, topics }) {
+  const text = `${title}. ${summary}`;
+  const vector = await embedder.embedQuery(text);
+  return vector;
+}
+
+export async function generateVectorFromQuery(query) {
+  const queryVector = await embedder.embedQuery(query);
+  return queryVector;
 }

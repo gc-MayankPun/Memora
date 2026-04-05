@@ -7,7 +7,8 @@ import SaveCard from "../components/SaveCard";
 import "../styles/dashboard.scss";
 
 export default function Dashboard() {
-  const { handleFetchAllSaves, saves, loading } = useDashboard();
+  const { handleFetchAllSaves, handleQuerySearch, saves, loading } =
+    useDashboard();
   const { user, handleLogout, handleDeleteAccount } = useAuth();
 
   const [activeFilter, setActiveFilter] = useState("All");
@@ -41,6 +42,8 @@ export default function Dashboard() {
     <div className="dashboard">
       <Navbar
         onSearch={setSearchQuery}
+        fetchQuerySearch={handleQuerySearch}
+        handleFetchAllSaves={handleFetchAllSaves}
         totalCount={saves.length}
         user={user}
         handleLogout={handleLogout}

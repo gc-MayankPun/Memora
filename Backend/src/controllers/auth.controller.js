@@ -73,7 +73,7 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-  const { username, password } = req.body;
+  const { username, password } = req.body;  
 
   const user = await userModel.findOne({ username });
   if (!user) {

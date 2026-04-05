@@ -5,12 +5,17 @@ import highlightModel from "../models/highlight.model.js";
 import saveModel from "../models/saves.model.js";
 
 // Services
-import { generateSummaryAndTopics } from "../services/ai.service.js";
+import {
+  generateSummaryAndTopics,
+  generateVectorFromData,
+  generateVectorFromQuery,
+} from "../services/ai.service.js";
 import { scrapeMetatags } from "../services/scraper.service.js";
 import { detectType } from "../services/detector.service.js";
 
 // Utils
 import { getTimeAgo } from "../utils/util.js";
+import mongoose from "mongoose";
 
 export async function createSave(req, res) {
   try {
@@ -33,6 +38,11 @@ export async function createSave(req, res) {
       keywords,
       url,
     });
+    const dataVector = await generateVectorFromData({
+      summary: summary || content,
+      title,
+      topics,
+    });
 
     const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
 
@@ -51,6 +61,7 @@ export async function createSave(req, res) {
       thumbnail,
       favicon,
       topics,
+      embedding: dataVector,
     });
 
     res.status(201).json({
@@ -135,6 +146,95 @@ export async function checkSave(req, res) {
     res.status(500).json({
       success: false,
       message: "Failed to check URL. Please try again",
+      error: err.message,
+    });
+  }
+}
+
+export async function getVectorQuerySave(req, res) {
+  try {
+    const { query } = req.query;
+    const userId = req.user.id;
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+
+    const queryVector = await generateVectorFromQuery(query);
+
+    // Run BOTH searches in parallel
+    const [vectorResults, keywordResults] = await Promise.all([
+      // 1. Vector search — finds semantic matches
+      saveModel.aggregate([
+        {
+          $vectorSearch: {
+            index: "vector_index",
+            path: "embedding",
+            queryVector: queryVector,
+            numCandidates: 100,
+            limit: 20,
+            filter: { userId: { $eq: userObjectId } },
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            url: 1,
+            summary: 1,
+            topics: 1,
+            tags: 1,
+            thumbnail: 1,
+            favicon: 1,
+            type: 1,
+            isFavorite: 1,
+            createdAt: 1,
+            score: { $meta: "vectorSearchScore" },
+          },
+        },
+        { $match: { score: { $gte: 0.82 } } }, // only truly similar
+      ]),
+
+      // 2. Keyword search — finds exact word matches
+      saveModel
+        .find({
+          userId,
+          $or: [
+            { title: { $regex: query, $options: "i" } },
+            { summary: { $regex: query, $options: "i" } },
+            { topics: { $regex: query, $options: "i" } },
+            { tags: { $regex: query, $options: "i" } },
+          ],
+        })
+        .select(
+          "title url summary topics tags thumbnail favicon type isFavorite createdAt",
+        )
+        .lean(),
+    ]);
+
+    // Merge — keyword results get priority, no duplicates
+    const seen = new Set();
+    const merged = [];
+
+    // Keyword first (exact matches are more trustworthy)
+    for (const doc of keywordResults) {
+      seen.add(doc._id.toString());
+      merged.push({ ...doc, matchType: "keyword" });
+    }
+
+    // Then vector results that aren't already included
+    for (const doc of vectorResults) {
+      if (!seen.has(doc._id.toString())) {
+        seen.add(doc._id.toString());
+        merged.push({ ...doc, matchType: "semantic" });
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Fetched similar queries",
+      results: merged,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch similar queries.",
       error: err.message,
     });
   }
