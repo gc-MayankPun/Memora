@@ -11,9 +11,11 @@ import "../styles/navbar.scss";
 
 export default function Navbar({
   onSearch,
+  fetchQuerySearch,
   totalCount,
   user,
   handleLogout,
+  handleFetchAllSaves,
   handleDeleteAccount,
 }) {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ export default function Navbar({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirm, setConfirm] = useState(null); // "logout" | "delete" | null
   const dropdownRef = useRef(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -47,6 +50,22 @@ export default function Navbar({
     if (result?.success) navigate("/login");
   };
 
+  const handleSearch = async (e) => {
+    if (e.key === "Enter") {
+      if (!query.trim()) {
+        handleFetchAllSaves();  
+        return;
+      }
+      fetchQuerySearch(query);
+    }
+  };
+ 
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    if (value === "") handleFetchAllSaves();  
+  };
+
   return (
     <nav className="navbar">
       <span className="navbar__logo">Memora</span>
@@ -71,9 +90,11 @@ export default function Navbar({
         </span>
         <input
           type="text"
-          placeholder="Search by title or tag..."
-          className="navbar__search"
-          onChange={(e) => onSearch(e.target.value)}
+          placeholder="Search your saves..."
+          className="navbar__search" 
+          onChange={handleSearchInput}
+          value={query}
+          onKeyDown={handleSearch}
         />
       </div>
 

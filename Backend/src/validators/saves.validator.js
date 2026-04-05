@@ -73,6 +73,15 @@ export const getSaveValidator = [
   validate,
 ];
 
+export const searchSaveValidator = [
+  query("query")
+    .notEmpty()
+    .withMessage("Search Query is required")
+    .isString()
+    .withMessage("Invalid Search Query"),
+  validate,
+];
+
 export const updateFavoriteValidator = [
   param("saveId")
     .notEmpty()

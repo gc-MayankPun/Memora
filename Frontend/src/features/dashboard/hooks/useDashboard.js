@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { fetchAllSaves } from "../services/dashboard.api";
+import { fetchAllSaves, fetchQuerySearch } from "../services/dashboard.api";
 import { DashboardContext } from "../dashboard.context";
 import { toast } from "react-toastify";
 
@@ -21,8 +21,23 @@ export const useDashboard = () => {
     }
   }
 
+  async function handleQuerySearch(query) { 
+    setLoading(true);
+    try {
+      const data = await fetchQuerySearch(query);
+      setSaves(data.results);
+
+      return data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     handleFetchAllSaves,
+    handleQuerySearch,
     loading,
     saves,
   };

@@ -9,6 +9,7 @@ import {
   deleteSave,
   updateTags,
   updateNote,
+  getVectorQuerySave,
 } from "../controllers/saves.controller.js";
 import { authUser } from "../middlewares/auth.middleware.js";
 import {
@@ -22,6 +23,7 @@ import {
   createSaveValidator,
   deleteSaveValidator,
   getSaveValidator,
+  searchSaveValidator,
   updateFavoriteValidator,
   updateNoteValidator,
   updateSaveValidator,
@@ -70,6 +72,14 @@ savesRouter.patch(
   updateSaveLimiter,
   updateNoteValidator,
   updateNote,
+);
+
+savesRouter.get(
+  "/search",
+  authUser,
+  readSavesLimiter,
+  searchSaveValidator,
+  getVectorQuerySave,
 );
 
 savesRouter.get(
