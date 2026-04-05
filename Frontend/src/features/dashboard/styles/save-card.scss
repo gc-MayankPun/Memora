@@ -34,8 +34,9 @@
     }
   }
 
-  &__thumbnail {
-    height: 148px;
+  &__thumbnail { 
+    min-height: 12rem;
+    height: 12rem; 
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
