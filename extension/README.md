@@ -6,20 +6,20 @@ The Memora extension lets you save any webpage to your Memora account directly f
 
 ## Prerequisites
 
-- Google Chrome browser
+Before installing the extension, make sure you have:
+
+- A Chromium-based browser (e.g. Chrome, Brave, Edge)
 - A Memora account ([Sign up here](https://memora-01wh.onrender.com/register))
-- (Brave users only) Turn off Brave Shields for the Highlight feature to work properly.
+- If you're using Brave, disable Shields for the Highlight feature to work correctly
 
 ---
 
 ## Step 1 — Download the Extension
 
-1. Go to the [Memora GitHub repository](https://github.com/gc-MayankPun/Memora)
-2. Click the green **Code** button
-3. Click **Download ZIP**
-4. Once downloaded, **unzip** the file somewhere on your computer (e.g. your Desktop)
+1. [⬇️ Download Extension (ZIP)](https://github.com/gc_mayankpun/repo/raw/main/extension.zip)
+2. Once downloaded, **unzip** the file somewhere on your computer (e.g. your Desktop)
 
-> You'll see a folder called `Memora-main` or similar. Inside it, find the `extension` folder, that's the one you need.
+> You'll see a folder called `extension`, that's the one you need.
 
 ---
 

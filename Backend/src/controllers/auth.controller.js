@@ -73,7 +73,7 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-  const { username, password } = req.body;  
+  const { username, password } = req.body;
 
   const user = await userModel.findOne({ username });
   if (!user) {
@@ -197,6 +197,13 @@ export async function verifyEmail(req, res) {
     user.verificationExpiresAt = null;
     await user.save();
 
+    const authToken = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
+    res.cookie("token", authToken, cookieOptions);
     return res.send(verifyEmailHTML());
   } catch (err) {
     return res.status(400).json({
