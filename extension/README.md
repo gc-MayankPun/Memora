@@ -16,7 +16,7 @@ Before installing the extension, make sure you have:
 
 ## Step 1 — Download the Extension
 
-1. [⬇️ Download Extension (ZIP)](https://github.com/gc_mayankpun/repo/raw/main/extension.zip)
+1. [⬇️ Download Extension (ZIP)](https://drive.google.com/file/d/1F04L2lviCr-Jblm8f_cSjXChWTpdyNL5/view?usp=drive_link)
 2. Once downloaded, **unzip** the file somewhere on your computer (e.g. your Desktop)
 
 > You'll see a folder called `extension`, that's the one you need.
