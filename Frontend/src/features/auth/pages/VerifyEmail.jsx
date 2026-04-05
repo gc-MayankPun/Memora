@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { HiOutlineExternalLink } from "react-icons/hi";
@@ -7,8 +7,24 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function VerifyEmail() {
   const navigate = useNavigate();
-  const { loading, handleResendVerification } = useAuth();
+  const { loading, user, handleGetMe, handleResendVerification } = useAuth();
   const email = sessionStorage.getItem("pendingEmail");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/", { replace: true });
+      return;
+    }
+
+    async function ensureAuth() {
+      const data = await handleGetMe();
+      if (data?.user) {
+        navigate("/", { replace: true });
+      }
+    }
+
+    ensureAuth();
+  }, [user, navigate, handleGetMe]);
 
   const [resent, setResent] = useState(false);
   const [cooldown, setCooldown] = useState(false);
