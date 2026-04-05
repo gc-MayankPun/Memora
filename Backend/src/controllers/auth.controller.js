@@ -204,7 +204,7 @@ export async function verifyEmail(req, res) {
     );
 
     res.cookie("token", authToken, cookieOptions);
-    return res.send(verifyEmailHTML());
+    return res.redirect(process.env.FRONTEND_URL || "/");
   } catch (err) {
     return res.status(400).json({
       message: "Invalid or expired token",
