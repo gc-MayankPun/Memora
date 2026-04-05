@@ -1,5 +1,4 @@
-import { DashboardProvider } from "../features/dashboard/dashboard.context";
-import { SavesProvider } from "../features/saves/saves.context";
+// import { DashboardProvider } from "../features/dashboard/dashboard.context"; 
 import Dashboard from "../features/dashboard/pages/Dashboard";
 import Protected from "../features/auth/components/Protected";
 import { createBrowserRouter } from "react-router";
@@ -12,16 +11,16 @@ import Collections from "../features/collections/pages/Collections";
 import CollectionDetail from "../features/collections/pages/CollectionDetail";
 import Guest from "../features/auth/components/Guest";
 import VerifyEmailGuard from "../features/auth/components/VerifyEmailGuard";
-import ErrorPage from "./ErrorPage";
+import ErrorPage from "./pages/ErrorPage"; 
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <Protected>
-        <DashboardProvider>
+        {/* <DashboardProvider> */}
           <Dashboard />
-        </DashboardProvider>
+        {/* </DashboardProvider> */}
       </Protected>
     ),
     errorElement: <ErrorPage />, 

@@ -1,4 +1,4 @@
-import { useAuth } from "../features/auth/hooks/useAuth";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 import "./app-gate.scss"
 
 const AppGate = ({ children }) => {
