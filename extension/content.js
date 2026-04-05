@@ -1,4 +1,5 @@
-const API_URL = "https://memora-01wh.onrender.com";
+// const API_URL = "https://memora-01wh.onrender.com";
+const API_URL = "http://localhost:3000";
 
 let tooltip = null;
 let selectedText = "";

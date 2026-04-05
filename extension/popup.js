@@ -1,5 +1,7 @@
-const APP_URL = "https://memora-01wh.onrender.com";
-const API_URL = "https://memora-01wh.onrender.com";
+// const APP_URL = "https://memora-01wh.onrender.com";
+// const API_URL = "https://memora-01wh.onrender.com";
+const APP_URL = "http://localhost:5173";
+const API_URL = "http://localhost:3000";
 let existingSaveId = null;
 let update = false;
 

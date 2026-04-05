@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Memora",
-  "version": "1.0",
+  "version": "2.0",
   "description": "Save anything from the web. Recall it later.",
 
   "action": {
