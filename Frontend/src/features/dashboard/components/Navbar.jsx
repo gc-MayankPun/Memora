@@ -10,7 +10,6 @@ import { useContext, useRef, useState, useEffect } from "react";
 import "../styles/navbar.scss";
 
 export default function Navbar({
-  onSearch,
   fetchQuerySearch,
   totalCount,
   user,
@@ -21,7 +20,7 @@ export default function Navbar({
   const navigate = useNavigate();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [confirm, setConfirm] = useState(null); // "logout" | "delete" | null
+  const [confirm, setConfirm] = useState(null);
   const dropdownRef = useRef(null);
   const [query, setQuery] = useState("");
 
@@ -53,17 +52,17 @@ export default function Navbar({
   const handleSearch = async (e) => {
     if (e.key === "Enter") {
       if (!query.trim()) {
-        handleFetchAllSaves();  
+        handleFetchAllSaves();
         return;
       }
       fetchQuerySearch(query);
     }
   };
- 
+
   const handleSearchInput = (e) => {
     const value = e.target.value;
     setQuery(value);
-    if (value === "") handleFetchAllSaves();  
+    if (value === "") handleFetchAllSaves();
   };
 
   return (
@@ -73,25 +72,14 @@ export default function Navbar({
       <div className="navbar__search-wrapper">
         <span className="navbar__search-icon">
           <svg viewBox="0 0 16 16" fill="none">
-            <circle
-              cx="7"
-              cy="7"
-              r="5"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M11 11l3 3"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
+            <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M11 11l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </span>
         <input
           type="text"
           placeholder="Search your saves..."
-          className="navbar__search" 
+          className="navbar__search"
           onChange={handleSearchInput}
           value={query}
           onKeyDown={handleSearch}
@@ -102,28 +90,17 @@ export default function Navbar({
         {totalCount > 0 && (
           <span className="navbar__count">{totalCount} Saves</span>
         )}
-
-        <button
-          className="navbar__graph-btn"
-          onClick={() => navigate("/collections")}
-        >
+        <button className="navbar__graph-btn" onClick={() => navigate("/collections")}>
           ◫ <span>Collections</span>
         </button>
-
-        <button
-          className="navbar__graph-btn"
-          onClick={() => navigate("/graph")}
-        >
+        <button className="navbar__graph-btn" onClick={() => navigate("/graph")}>
           ◈ <span>Graph</span>
         </button>
 
         <div className="navbar__settings-wrap" ref={dropdownRef}>
           <button
             className={`navbar__settings-btn ${settingsOpen ? "navbar__settings-btn--active" : ""}`}
-            onClick={() => {
-              setSettingsOpen((prev) => !prev);
-              setConfirm(null);
-            }}
+            onClick={() => { setSettingsOpen((prev) => !prev); setConfirm(null); }}
             aria-label="Settings"
           >
             <IoSettingsOutline />
@@ -131,23 +108,14 @@ export default function Navbar({
 
           {settingsOpen && (
             <div className="navbar__dropdown">
-              {/* ── Confirm state ── */}
               {confirm === "logout" && (
                 <div className="navbar__dropdown-confirm">
-                  <p className="navbar__dropdown-confirm-text">
-                    Sure you want to log out?
-                  </p>
+                  <p className="navbar__dropdown-confirm-text">Sure you want to log out?</p>
                   <div className="navbar__dropdown-confirm-actions">
-                    <button
-                      className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--cancel"
-                      onClick={() => setConfirm(null)}
-                    >
+                    <button className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--cancel" onClick={() => setConfirm(null)}>
                       <IoClose /> Cancel
                     </button>
-                    <button
-                      className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--ok"
-                      onClick={handleLogoutMenu}
-                    >
+                    <button className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--ok" onClick={handleLogoutMenu}>
                       <LuLogOut /> Log out
                     </button>
                   </div>
@@ -157,75 +125,38 @@ export default function Navbar({
               {confirm === "delete" && (
                 <div className="navbar__dropdown-confirm">
                   <p className="navbar__dropdown-confirm-text">
-                    This will delete your account and all your saves
-                    permanently.
+                    This will delete your account and all your saves permanently.
                   </p>
                   <div className="navbar__dropdown-confirm-actions">
-                    <button
-                      className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--cancel"
-                      onClick={() => setConfirm(null)}
-                    >
+                    <button className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--cancel" onClick={() => setConfirm(null)}>
                       <IoClose /> Cancel
                     </button>
-                    <button
-                      className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--danger"
-                      onClick={handleDeleteMenu}
-                    >
+                    <button className="navbar__dropdown-confirm-btn navbar__dropdown-confirm-btn--danger" onClick={handleDeleteMenu}>
                       <RiDeleteBin6Line /> Delete
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* ── Normal menu ── */}
               {!confirm && (
                 <>
                   <div className="navbar__dropdown-user">
-                    <span className="navbar__dropdown-username">
-                      {user?.username || "User"}
-                    </span>
-                    <span className="navbar__dropdown-email">
-                      {user?.email || ""}
-                    </span>
+                    <span className="navbar__dropdown-username">{user?.username || "User"}</span>
+                    <span className="navbar__dropdown-email">{user?.email || ""}</span>
                   </div>
-
                   <div className="navbar__dropdown-divider" />
-
-                  <button
-                    className="navbar__dropdown-item"
-                    onClick={() => {
-                      toggleTheme();
-                      setSettingsOpen(false);
-                    }}
-                  >
-                    {theme === "dark" ? (
-                      <>
-                        <IoSunnySharp className="navbar__dropdown-icon" /> Light
-                        mode
-                      </>
-                    ) : (
-                      <>
-                        <FaMoon className="navbar__dropdown-icon" /> Dark mode
-                      </>
-                    )}
+                  <button className="navbar__dropdown-item" onClick={() => { toggleTheme(); setSettingsOpen(false); }}>
+                    {theme === "dark"
+                      ? <><IoSunnySharp className="navbar__dropdown-icon" /> Light mode</>
+                      : <><FaMoon className="navbar__dropdown-icon" /> Dark mode</>
+                    }
                   </button>
-
                   <div className="navbar__dropdown-divider" />
-
-                  <button
-                    className="navbar__dropdown-item"
-                    onClick={() => setConfirm("logout")}
-                  >
-                    <LuLogOut className="navbar__dropdown-icon" />
-                    Log out
+                  <button className="navbar__dropdown-item" onClick={() => setConfirm("logout")}>
+                    <LuLogOut className="navbar__dropdown-icon" /> Log out
                   </button>
-
-                  <button
-                    className="navbar__dropdown-item navbar__dropdown-item--danger"
-                    onClick={() => setConfirm("delete")}
-                  >
-                    <RiDeleteBin6Line className="navbar__dropdown-icon" />
-                    Delete account
+                  <button className="navbar__dropdown-item navbar__dropdown-item--danger" onClick={() => setConfirm("delete")}>
+                    <RiDeleteBin6Line className="navbar__dropdown-icon" /> Delete account
                   </button>
                 </>
               )}

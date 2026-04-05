@@ -65,11 +65,11 @@ export function verifyEmailHTML() {
     <p style="color:#555; font-size:14px; line-height:1.6;">
       Your email has been successfully verified.  
       You can now log in to your account.
-    </p>
+    </p> 
 
-    <a href="${process.env.FRONTEND_URL}/login"
+    <a href="${process.env.FRONTEND_URL}/"
        style="display:inline-block; margin-top:20px; padding:12px 24px; background:#003cb4; color:#fff; text-decoration:none; border-radius:8px; font-weight:600;">
-       Go to Login
+       Go to Memora
     </a>
 
   </div>

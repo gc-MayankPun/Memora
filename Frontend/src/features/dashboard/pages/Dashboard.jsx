@@ -10,40 +10,36 @@ export default function Dashboard() {
   const { handleFetchAllSaves, handleQuerySearch, saves, loading } =
     useDashboard();
   const { user, handleLogout, handleDeleteAccount } = useAuth();
-
   const [activeFilter, setActiveFilter] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     if (saves.length !== 0) return;
     handleFetchAllSaves();
   }, []);
 
-  const filteredByType =
+  const filteredSaves =
     activeFilter === "All"
       ? saves
       : activeFilter === "Favorites"
         ? saves.filter((s) => s.isFavorite)
         : saves.filter((s) => s.type === activeFilter.toLowerCase());
 
-  const filteredSaves = searchQuery
-    ? filteredByType.filter(
-        (s) =>
-          s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.tags?.some((t) =>
-            t.toLowerCase().includes(searchQuery.toLowerCase()),
-          ),
-      )
-    : filteredByType;
+  const handleSearch = (query) => {
+    setIsSearching(!!query?.trim());
+    handleQuerySearch(query);
+  };
 
-  const isFiltered = searchQuery !== "" || activeFilter !== "All";
+  const handleClear = () => {
+    setIsSearching(false);
+    handleFetchAllSaves();
+  };
 
   return (
     <div className="dashboard">
       <Navbar
-        onSearch={setSearchQuery}
-        fetchQuerySearch={handleQuerySearch}
-        handleFetchAllSaves={handleFetchAllSaves}
+        fetchQuerySearch={handleSearch}
+        handleFetchAllSaves={handleClear}
         totalCount={saves.length}
         user={user}
         handleLogout={handleLogout}
@@ -63,25 +59,32 @@ export default function Dashboard() {
       ) : filteredSaves.length === 0 ? (
         <div className="dashboard__empty">
           <div className="dashboard__empty-icon">◈</div>
+
           <p className="dashboard__empty-title">
-            {isFiltered ? "No matches found" : "Nothing saved yet"}
+            {isSearching ? "No matches found" : "Nothing saved yet"}
           </p>
+
           <p className="dashboard__empty-subtitle">
-            {isFiltered
-              ? "Try a different search term or filter."
-              : "Use the Memora extension to save articles, tweets, videos and more from the web."}
+            {isSearching
+              ? "Try different words."
+              : "Save anything from the web — articles, videos, tweets, and more."}
           </p>
-          {!isFiltered && (
-            <p className="dashboard__empty-link">
-              <a
-                href="https://github.com/gc-MayankPun/Memora/blob/main/extension/README.md"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Click here
-              </a>{" "}
-              to setup the extension
-            </p>
+
+          {isSearching && (
+            <button className="dashboard__empty-cta" onClick={handleClear}>
+              ← Back to all saves
+            </button>
+          )}
+
+          {!isSearching && (
+            <a
+              href="https://github.com/gc-MayankPun/Memora/blob/main/extension/README.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="dashboard__empty-cta"
+            >
+              Install Extension →
+            </a>
           )}
         </div>
       ) : (
