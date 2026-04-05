@@ -35,11 +35,11 @@ export const scrapeMetatags = async (url) => {
 
     const thumbnailRaw =
       $('meta[property="og:image"]').attr("content") ||
-      $('meta[name="twitter:image"]').attr("content") ||
-      $('meta[property="og:image:url"]').attr("content") ||
       $('meta[property="og:image:secure_url"]').attr("content") ||
+      $('meta[property="og:image:url"]').attr("content") ||
+      $('meta[name="twitter:image"]').attr("content") ||
+      $('link[rel="image_src"]').attr("href") ||
       "";
-
     const favicon = faviconRaw ? toAbsoluteUrl(url, faviconRaw) : "";
     const thumbnail = thumbnailRaw ? toAbsoluteUrl(url, thumbnailRaw) : "";
 
