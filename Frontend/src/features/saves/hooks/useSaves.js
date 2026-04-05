@@ -9,10 +9,13 @@ import {
 } from "../services/saves.api";
 import { SaveContext } from "../saves.context";
 import { toast } from "react-toastify";
+import { DashboardContext } from "../../dashboard/dashboard.context";
 
 export const useSaves = () => {
   const context = useContext(SaveContext);
+  const DashContext = useContext(DashboardContext);
   const { setLoading, loading, setSave, save } = context;
+  const { setSaves } = DashContext;
   const [allSaves, setAllSaves] = useState([]);
 
   async function handleFetchSave(id) {
@@ -38,7 +41,8 @@ export const useSaves = () => {
   async function handleDeleteSave(id) {
     setLoading(true);
     try {
-      const data = await deleteSave(id); 
+      const data = await deleteSave(id);
+      setSaves((prev) => prev.filter((s) => s._id !== id));
       return data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
