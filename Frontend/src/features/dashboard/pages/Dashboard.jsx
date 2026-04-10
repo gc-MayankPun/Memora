@@ -13,10 +13,10 @@ export default function Dashboard() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => {
-    if (saves.length !== 0) return;
+  useEffect(() => { 
+    if (!user) return;
     handleFetchAllSaves();
-  }, []); 
+  }, []);
 
   const filteredSaves =
     activeFilter === "All"
