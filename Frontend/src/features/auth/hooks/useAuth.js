@@ -9,11 +9,9 @@ import {
   resendVerificationEmail,
 } from "../services/auth.api";
 import { toast } from "react-toastify";
-import { useDashboard } from "../../dashboard/hooks/useDashboard";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const { resetDashboard } = useDashboard();
   const { actionLoading, authLoading, setActionLoading, user, setUser } =
     context;
 
@@ -53,7 +51,6 @@ export const useAuth = () => {
     try {
       const data = await logoutUser();
       setUser(null);
-      resetDashboard();
       return data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -66,6 +63,7 @@ export const useAuth = () => {
     setActionLoading(true);
     try {
       const data = await deleteAccount();
+      setUser(null);
       return data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
