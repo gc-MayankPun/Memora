@@ -434,7 +434,6 @@ export async function updateNote(req, res) {
   }
 }
 
-
 export async function reEmbedAllSaves(req, res) {
   try {
     const saves = await saveModel.find({}, "_id title summary topics tags");

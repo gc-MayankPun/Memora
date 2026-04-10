@@ -32,13 +32,31 @@ function cosineSimilarity(a, b) {
 }
 
 function getRelated(currentSave, allSaves, limit = 3) {
-  if (!currentSave?.embedding?.length || !allSaves?.length) return [];
+  // fallback to topics if embeddings not available yet
+  if (!currentSave?.embedding?.length || !allSaves?.length) {
+    return allSaves
+      .filter((s) => s._id !== currentSave._id)
+      .map((s) => ({
+        ...s,
+        overlap: (s.topics || []).filter((t) => currentSave.topics?.includes(t))
+          .length,
+        sharedTopics: (s.topics || []).filter((t) =>
+          currentSave.topics?.includes(t),
+        ),
+      }))
+      .filter((s) => s.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap)
+      .slice(0, limit);
+  }
 
   return allSaves
     .filter((s) => s._id !== currentSave._id && s.embedding?.length)
     .map((s) => ({
       ...s,
       score: cosineSimilarity(currentSave.embedding, s.embedding),
+      sharedTopics: (s.topics || []).filter((t) =>
+        currentSave.topics?.includes(t),
+      ),
     }))
     .filter((s) => s.score > 0.75)
     .sort((a, b) => b.score - a.score)
