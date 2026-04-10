@@ -50,6 +50,7 @@ savesRouter.patch(
 );
 
 savesRouter.get("/", authUser, readSavesLimiter, getSaves);
+savesRouter.get("/embed", authUser, readSavesLimiter, reEmbedAllSaves);
 
 savesRouter.patch(
   "/:saveId/update-favorite",
