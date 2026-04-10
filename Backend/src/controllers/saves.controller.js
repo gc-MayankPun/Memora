@@ -154,27 +154,40 @@ export async function checkSave(req, res) {
 }
 
 export async function getVectorQuerySave(req, res) {
+  console.log("I got hit")
   try {
     const { query } = req.query;
+    console.log("Query recieved")
+    
+    if (!query || query.trim() === "") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Query is required" });
+    }
+
     const userId = req.user.id;
     const userObjectId = new mongoose.Types.ObjectId(userId);
+    const vectorThreshold = 0.55;
+
+    console.log("Starting vector + keyword generation...");
 
     const [queryVector, keywords] = await Promise.all([
       generateVectorFromQuery(query),
       extractSearchKeywords(query),
     ]);
 
+    console.log("Vector and keywords ready. Keywords:", keywords);
+
     const [vectorResults, keywordResults] = await Promise.all([
-      // 1. Vector search
       saveModel.aggregate([
         {
           $vectorSearch: {
             index: "vector_index",
             path: "embedding",
-            queryVector: queryVector,
+            queryVector,
             numCandidates: 100,
             limit: 20,
-            filter: { userId: { $eq: userObjectId } },
+            filter: { userId: userObjectId },
           },
         },
         {
@@ -192,10 +205,9 @@ export async function getVectorQuerySave(req, res) {
             score: { $meta: "vectorSearchScore" },
           },
         },
-        { $match: { score: { $gte: 0.55 } } },
+        { $match: { score: { $gte: vectorThreshold } } },
       ]),
 
-      // 2. Keyword search — using AI-extracted keywords, no summary
       keywords.length > 0
         ? saveModel
             .find({
@@ -213,17 +225,21 @@ export async function getVectorQuerySave(req, res) {
         : Promise.resolve([]),
     ]);
 
-    // Merged keyword results get priority, no duplicates
+    console.log(
+      "Vector results:",
+      vectorResults.length,
+      "Keyword results:",
+      keywordResults.length,
+    );
+
     const seen = new Set();
     const merged = [];
 
-    // Keyword first (exact matches are more trustworthy)
     for (const doc of keywordResults) {
       seen.add(doc._id.toString());
       merged.push({ ...doc, matchType: "keyword" });
     }
 
-    // Then vector results that aren't already included
     for (const doc of vectorResults) {
       if (!seen.has(doc._id.toString())) {
         seen.add(doc._id.toString());
@@ -237,6 +253,7 @@ export async function getVectorQuerySave(req, res) {
       results: merged,
     });
   } catch (err) {
+    console.error("getVectorQuerySave error:", err); // <-- see exact failure
     res.status(500).json({
       success: false,
       message: "Failed to fetch similar queries.",
@@ -452,7 +469,7 @@ export async function reEmbedAllSaves(req, res) {
 
         await saveModel.updateOne(
           { _id: save._id },
-          { $set: { embedding: newVector } }
+          { $set: { embedding: newVector } },
         );
 
         success++;

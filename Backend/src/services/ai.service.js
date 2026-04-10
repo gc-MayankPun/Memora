@@ -1,8 +1,16 @@
 import { ChatMistralAI, MistralAIEmbeddings } from "@langchain/mistralai";
 import { CohereEmbeddings } from "@langchain/cohere";
 
-const embeddingModel = new CohereEmbeddings({
-  model: "embed-english-v3.0",
+const queryEmbeddingModel = new CohereEmbeddings({
+  model: "embed-multilingual-v3.0",
+  apiKey: process.env.COHERE_API_KEY,
+  inputType: "search_query",
+});
+
+const documentEmbeddingModel = new CohereEmbeddings({
+  model: "embed-multilingual-v3.0",
+  apiKey: process.env.COHERE_API_KEY,
+  inputType: "search_document",
 });
 
 const mistralModel = new ChatMistralAI({
@@ -45,7 +53,7 @@ export async function generateSummaryAndTopics({
 
     {
       "summary": "your summary here",
-      "topics": ["topic1", "topic2", "topic3"]
+      "topics": ["topic1", "topic2", "topic3"],
       "aiTags": ["tag1", "tag2"] // Optional AI-generated tags to enhance user-provided tags
     }
 `,
@@ -81,12 +89,17 @@ export async function extractSearchKeywords(query) {
     const text = response.content;
     const cleaned = text.replace(/```json|```/g, "").trim();
     return JSON.parse(cleaned);
-  } catch { 
+  } catch {
     return query
       .toLowerCase()
       .split(/\s+/)
       .filter((w) => w.length > 3);
   }
+}
+
+export async function generateVectorFromQuery(query) {
+  const queryVector = await queryEmbeddingModel.embedQuery(query);
+  return queryVector;
 }
 
 export async function generateVectorFromData({
@@ -95,12 +108,8 @@ export async function generateVectorFromData({
   topics,
   tags = [],
 }) {
-  const text = `${title}. ${summary}. Topics: ${topics.join(", ")}. Tags: ${tags.join(", ")}`;
-  const vector = await embeddingModel.embedQuery(text);
+  const text =
+    `Title: ${title}\nSummary: ${summary}\nTopics: ${topics.join(", ")}\nTags: ${tags.join(", ")}`.trim();
+  const vector = await documentEmbeddingModel.embedQuery(text);
   return vector;
-}
-
-export async function generateVectorFromQuery(query) {
-  const queryVector = await embeddingModel.embedQuery(query);
-  return queryVector;
 }
