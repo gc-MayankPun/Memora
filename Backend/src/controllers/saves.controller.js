@@ -37,6 +37,7 @@ export async function createSave(req, res) {
       content,
       keywords,
       url,
+      tags,
     });
     const dataVector = await generateVectorFromData({
       summary: summary || content,
@@ -188,7 +189,7 @@ export async function getVectorQuerySave(req, res) {
             score: { $meta: "vectorSearchScore" },
           },
         },
-        { $match: { score: { $gte: 0.40 } } },
+        { $match: { score: { $gte: 0.4 } } },
       ]),
 
       // 2. Keyword search — finds exact word matches

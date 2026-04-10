@@ -65,7 +65,7 @@ export async function generateSummaryAndTopics({
   }
 }
 
-export async function generateVectorFromData({ summary, title, topics }) {
+export async function generateVectorFromData({ summary, title, topics, tags }) {
   const text = `${title}. ${summary}. Topics: ${topics.join(", ")}. Tags: ${tags.join(", ")}`;
   const vector = await embeddingModel.embedQuery(text);
   return vector;
