@@ -24,21 +24,24 @@ const TYPE_COLORS = {
   reddit: "var(--badge-reddit-color)",
 };
 
+function cosineSimilarity(a, b) {
+  const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
+  const magA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
+  const magB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
+  return dot / (magA * magB);
+}
+
 function getRelated(currentSave, allSaves, limit = 3) {
-  if (!currentSave?.topics?.length || !allSaves?.length) return [];
+  if (!currentSave?.embedding?.length || !allSaves?.length) return [];
 
   return allSaves
-    .filter((s) => s._id !== currentSave._id)
+    .filter((s) => s._id !== currentSave._id && s.embedding?.length)
     .map((s) => ({
       ...s,
-      overlap: (s.topics || []).filter((t) => currentSave.topics.includes(t))
-        .length,
-      sharedTopics: (s.topics || []).filter((t) =>
-        currentSave.topics.includes(t),
-      ),
+      score: cosineSimilarity(currentSave.embedding, s.embedding),
     }))
-    .filter((s) => s.overlap > 0)
-    .sort((a, b) => b.overlap - a.overlap)
+    .filter((s) => s.score > 0.75)
+    .sort((a, b) => b.score - a.score)
     .slice(0, limit);
 }
 

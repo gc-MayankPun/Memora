@@ -6,6 +6,7 @@ import saveModel from "../models/saves.model.js";
 
 // Services
 import {
+  extractSearchKeywords,
   generateSummaryAndTopics,
   generateVectorFromData,
   generateVectorFromQuery,
@@ -37,19 +38,19 @@ export async function createSave(req, res) {
       content,
       keywords,
       url,
-      tags,
     });
+
+    const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
+    const updatedTags = Array.from(
+      new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
+    );
+
     const dataVector = await generateVectorFromData({
       summary: summary || content,
       title,
       topics,
+      tags: updatedTags,
     });
-
-    const normalize = (tag) => tag.trim().toLowerCase().replace(/\s+/g, "-");
-
-    const updatedTags = Array.from(
-      new Set([...(tags || []), ...(aiTags || [])].map(normalize)),
-    );
 
     const saveDoc = await saveModel.create({
       userId,
@@ -158,11 +159,13 @@ export async function getVectorQuerySave(req, res) {
     const userId = req.user.id;
     const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    const queryVector = await generateVectorFromQuery(query);
+    const [queryVector, keywords] = await Promise.all([
+      generateVectorFromQuery(query),
+      extractSearchKeywords(query),
+    ]);
 
-    // Run BOTH searches in parallel
     const [vectorResults, keywordResults] = await Promise.all([
-      // 1. Vector search — finds semantic matches
+      // 1. Vector search
       saveModel.aggregate([
         {
           $vectorSearch: {
@@ -189,27 +192,28 @@ export async function getVectorQuerySave(req, res) {
             score: { $meta: "vectorSearchScore" },
           },
         },
-        { $match: { score: { $gte: 0.4 } } },
+        { $match: { score: { $gte: 0.55 } } },
       ]),
 
-      // 2. Keyword search — finds exact word matches
-      saveModel
-        .find({
-          userId,
-          $or: [
-            { title: { $regex: query, $options: "i" } },
-            { summary: { $regex: query, $options: "i" } },
-            { topics: { $regex: query, $options: "i" } },
-            { tags: { $regex: query, $options: "i" } },
-          ],
-        })
-        .select(
-          "title url summary topics tags thumbnail favicon type isFavorite createdAt",
-        )
-        .lean(),
+      // 2. Keyword search — using AI-extracted keywords, no summary
+      keywords.length > 0
+        ? saveModel
+            .find({
+              userId,
+              $or: keywords.flatMap((word) => [
+                { title: { $regex: word, $options: "i" } },
+                { topics: { $regex: word, $options: "i" } },
+                { tags: { $regex: word, $options: "i" } },
+              ]),
+            })
+            .select(
+              "title url summary topics tags thumbnail favicon type isFavorite createdAt",
+            )
+            .lean()
+        : Promise.resolve([]),
     ]);
 
-    // Merge — keyword results get priority, no duplicates
+    // Merged keyword results get priority, no duplicates
     const seen = new Set();
     const merged = [];
 
@@ -425,6 +429,47 @@ export async function updateNote(req, res) {
     res.status(500).json({
       success: false,
       message: "Failed to update note. Please try again",
+      error: err.message,
+    });
+  }
+}
+
+
+export async function reEmbedAllSaves(req, res) {
+  try {
+    const saves = await saveModel.find({}, "_id title summary topics tags");
+
+    let success = 0;
+    let failed = 0;
+
+    for (const save of saves) {
+      try {
+        const newVector = await generateVectorFromData({
+          title: save.title,
+          summary: save.summary,
+          topics: save.topics,
+          tags: save.tags,
+        });
+
+        await saveModel.updateOne(
+          { _id: save._id },
+          { $set: { embedding: newVector } }
+        );
+
+        success++;
+      } catch {
+        failed++;
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Re-embedding complete. ${success} updated, ${failed} failed.`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Re-embedding failed",
       error: err.message,
     });
   }
