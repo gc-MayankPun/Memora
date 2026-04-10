@@ -167,7 +167,7 @@ export async function getVectorQuerySave(req, res) {
 
     const userId = req.user.id;
     const userObjectId = new mongoose.Types.ObjectId(userId);
-    const vectorThreshold = 0.55;
+    const vectorThreshold = 0.7;
 
     console.log("Starting vector + keyword generation...");
 
@@ -186,7 +186,7 @@ export async function getVectorQuerySave(req, res) {
             path: "embedding",
             queryVector,
             numCandidates: 100,
-            limit: 20,
+            limit: 10,
             filter: { userId: userObjectId },
           },
         },
@@ -235,22 +235,28 @@ export async function getVectorQuerySave(req, res) {
     const seen = new Set();
     const merged = [];
 
+    // Add keyword results first (lower priority)
     for (const doc of keywordResults) {
       seen.add(doc._id.toString());
-      merged.push({ ...doc, matchType: "keyword" });
+      merged.push({ ...doc, matchType: "keyword", score: 0 });
     }
 
-    for (const doc of vectorResults) {
+    // Add semantic results (higher priority, sorted by score)
+    const sortedVectorResults = vectorResults.sort((a, b) => b.score - a.score);
+    for (const doc of sortedVectorResults) {
       if (!seen.has(doc._id.toString())) {
         seen.add(doc._id.toString());
         merged.push({ ...doc, matchType: "semantic" });
       }
     }
 
+    // Return only top 10 most relevant results
+    const topResults = merged.slice(0, 10);
+
     return res.status(200).json({
       success: true,
       message: "Fetched similar queries",
-      results: merged,
+      results: topResults,
     });
   } catch (err) {
     console.error("getVectorQuerySave error:", err); // <-- see exact failure
