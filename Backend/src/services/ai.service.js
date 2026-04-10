@@ -1,13 +1,13 @@
 import { ChatMistralAI, MistralAIEmbeddings } from "@langchain/mistralai";
+import { CohereEmbeddings } from "@langchain/cohere";
+
+const embeddingModel = new CohereEmbeddings({
+  model: "embed-english-v3.0",
+});
 
 const mistralModel = new ChatMistralAI({
   model: "mistral-small-latest",
   apiKey: process.env.MISTRAL_API_KEY,
-});
-
-const embedder = new MistralAIEmbeddings({
-  apiKey: process.env.MISTRAL_API_KEY,
-  model: "mistral-embed",
 });
 
 export async function generateSummaryAndTopics({
@@ -66,12 +66,12 @@ export async function generateSummaryAndTopics({
 }
 
 export async function generateVectorFromData({ summary, title, topics }) {
-  const text = `${title}. ${summary}`;
-  const vector = await embedder.embedQuery(text);
+  const text = `${title}. ${summary}. Topics: ${topics.join(", ")}. Tags: ${tags.join(", ")}`;
+  const vector = await embeddingModel.embedQuery(text);
   return vector;
 }
 
 export async function generateVectorFromQuery(query) {
-  const queryVector = await embedder.embedQuery(query);
+  const queryVector = await embeddingModel.embedQuery(query);
   return queryVector;
 }
