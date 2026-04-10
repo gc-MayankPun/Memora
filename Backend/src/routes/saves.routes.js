@@ -10,6 +10,7 @@ import {
   updateTags,
   updateNote,
   getVectorQuerySave,
+  reEmbedAllSaves,
 } from "../controllers/saves.controller.js";
 import { authUser } from "../middlewares/auth.middleware.js";
 import {

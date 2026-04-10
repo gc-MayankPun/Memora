@@ -65,7 +65,36 @@ export async function generateSummaryAndTopics({
   }
 }
 
-export async function generateVectorFromData({ summary, title, topics, tags=[] }) {
+export async function extractSearchKeywords(query) {
+  const response = await mistralModel.invoke(
+    `Extract the most important search keywords from this query. 
+    Remove stop words, filler words, and keep only meaningful terms.
+    Return ONLY a JSON array of strings, nothing else.
+    
+    Query: "${query}"
+    
+    Example: "how to make my react app faster" → ["react", "performance", "optimization"]
+    Example: "best ways to learn docker" → ["docker", "learning"]`,
+  );
+
+  try {
+    const text = response.content;
+    const cleaned = text.replace(/```json|```/g, "").trim();
+    return JSON.parse(cleaned);
+  } catch { 
+    return query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((w) => w.length > 3);
+  }
+}
+
+export async function generateVectorFromData({
+  summary,
+  title,
+  topics,
+  tags = [],
+}) {
   const text = `${title}. ${summary}. Topics: ${topics.join(", ")}. Tags: ${tags.join(", ")}`;
   const vector = await embeddingModel.embedQuery(text);
   return vector;
