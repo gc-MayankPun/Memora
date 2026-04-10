@@ -188,7 +188,7 @@ export async function getVectorQuerySave(req, res) {
             score: { $meta: "vectorSearchScore" },
           },
         },
-        { $match: { score: { $gte: 0.82 } } }, // only truly similar
+        { $match: { score: { $gte: 0.40 } } },
       ]),
 
       // 2. Keyword search — finds exact word matches
