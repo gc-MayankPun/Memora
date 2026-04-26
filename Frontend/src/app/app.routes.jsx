@@ -11,6 +11,7 @@ import CollectionDetail from "../features/collections/pages/CollectionDetail";
 import Guest from "../features/auth/components/Guest";
 import VerifyEmailGuard from "../features/auth/components/VerifyEmailGuard";
 import ErrorPage from "./pages/ErrorPage"; 
+import Landing from "./Landing";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       </Protected>
     ),
     errorElement: <ErrorPage />, 
+  },
+  {
+    path: "/landing",
+    element: <Landing />
   },
   {
     path: "/login",
