@@ -111,6 +111,6 @@ export async function generateVectorFromData({
 }) {
   const text =
     `Title: ${title}\nSummary: ${summary}\nTopics: ${topics.join(", ")}\nTags: ${tags.join(", ")}`.trim();
-  const vector = await documentEmbeddingModel.embedDocuments([text]);
+  const [vector] = await documentEmbeddingModel.embedDocuments([text]);
   return vector;
 }
