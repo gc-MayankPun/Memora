@@ -10,7 +10,7 @@ import Collections from "../features/collections/pages/Collections";
 import CollectionDetail from "../features/collections/pages/CollectionDetail";
 import Guest from "../features/auth/components/Guest";
 import VerifyEmailGuard from "../features/auth/components/VerifyEmailGuard";
-import ErrorPage from "./pages/ErrorPage"; 
+import ErrorPage from "./pages/ErrorPage";
 import Landing from "./Landing";
 
 export const router = createBrowserRouter([
@@ -19,15 +19,19 @@ export const router = createBrowserRouter([
     element: (
       <Protected>
         {/* <DashboardProvider> */}
-          <Dashboard />
+        <Dashboard />
         {/* </DashboardProvider> */}
       </Protected>
     ),
-    errorElement: <ErrorPage />, 
+    errorElement: <ErrorPage />,
   },
   {
     path: "/landing",
-    element: <Landing />
+    element: (
+      <Guest>
+        <Landing />
+      </Guest>
+    ),
   },
   {
     path: "/login",
@@ -53,7 +57,7 @@ export const router = createBrowserRouter([
         <VerifyEmail />
       </VerifyEmailGuard>
     ),
-  }, 
+  },
   {
     path: "/saves/:saveId",
     element: (

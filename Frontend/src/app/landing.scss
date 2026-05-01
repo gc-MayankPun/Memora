@@ -1,6 +1,6 @@
 @use "./styles/variables" as *; 
 
-// ─── Tokens ───────────────────────────────────────────────────────────────────
+// Tokens
 $r-sm: 6px;
 $r-md: 10px;
 $r-lg: 16px;
@@ -8,7 +8,7 @@ $r-xl: 22px;
 $pad-section: 110px;
 $pad-section-mob: 64px;
 
-// ─── Root ─────────────────────────────────────────────────────────────────────
+// Root
 .lp {
   position: relative;
   min-height: 100vh;
@@ -17,7 +17,7 @@ $pad-section-mob: 64px;
   font-family: $font-body;
 }
 
-// ─── Ambient ──────────────────────────────────────────────────────────────────
+// Ambient
 .lp__ambient {
   position: fixed;
   inset: 0;
@@ -59,7 +59,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Nav ──────────────────────────────────────────────────────────────────────
+// Nav
 .lp-nav {
   position: fixed;
   top: 0;
@@ -166,7 +166,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Buttons ──────────────────────────────────────────────────────────────────
+// Buttons
 .lp-btn {
   display: inline-flex;
   align-items: center;
@@ -215,10 +215,9 @@ $pad-section-mob: 64px;
   }
   &--download {
     background: var(--accent);
-    color: white;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+    color: white; 
+    align-items: flex-start; 
+    gap: 0.5rem;
     padding: 14px 22px;
     &:hover {
       opacity: 0.9;
@@ -237,7 +236,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Shared section ───────────────────────────────────────────────────────────
+// Shared section
 .lp-section {
   position: relative;
   z-index: 1;
@@ -297,7 +296,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── HERO ─────────────────────────────────────────────────────────────────────
+// HERO
 .lp-hero {
   position: relative;
   z-index: 1;
@@ -391,7 +390,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Mockup switcher ──────────────────────────────────────────────────────────
+// Mockup switcher
 .lp-mockup-switcher {
   width: 100%;
 }
@@ -440,7 +439,7 @@ $pad-section-mob: 64px;
   animation: float 6s ease-in-out infinite;
 }
 
-// ─── App mockup shared ────────────────────────────────────────────────────────
+// App mockup shared
 .lpm {
   font-size: 0.8rem;
   color: var(--text-primary);
@@ -985,7 +984,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Steps ────────────────────────────────────────────────────────────────────
+// Steps
 .lp-steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1047,7 +1046,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Features ─────────────────────────────────────────────────────────────────
+// Features
 .lp-features {
   display: flex;
   flex-direction: column;
@@ -1172,7 +1171,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Vector explainer ─────────────────────────────────────────────────────────
+// Vector explainer
 .lp-vector {
   display: flex;
   gap: 4.5rem;
@@ -1271,7 +1270,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Download ─────────────────────────────────────────────────────────────────
+// Download
 .lp-download {
   display: flex;
   gap: 4.5rem;
@@ -1428,7 +1427,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── FAQ ──────────────────────────────────────────────────────────────────────
+// FAQ
 .lp-faq {
   display: flex;
   flex-direction: column;
@@ -1480,7 +1479,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Final CTA ────────────────────────────────────────────────────────────────
+// Final CTA
 .lp-cta {
   position: relative;
   z-index: 1;
@@ -1519,7 +1518,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Footer ───────────────────────────────────────────────────────────────────
+// Footer
 .lp-footer {
   background: var(--bg-card);
   border-top: 1px solid var(--border);
@@ -1613,7 +1612,7 @@ $pad-section-mob: 64px;
   }
 }
 
-// ─── Animations ───────────────────────────────────────────────────────────────
+// Animations
 @keyframes orb-a {
   0% {
     transform: translate(0, 0) scale(1);

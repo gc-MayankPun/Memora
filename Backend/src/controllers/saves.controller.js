@@ -107,6 +107,18 @@ export async function updateSave(req, res) {
       });
     }
 
+    // Regenerate embedding since title or tags may have changed
+    const newEmbedding = await generateVectorFromData({
+      summary: saveDoc.summary,
+      title: saveDoc.title,
+      topics: saveDoc.topics,
+      tags: saveDoc.tags,
+    });
+    await saveModel.updateOne(
+      { _id: saveId },
+      { $set: { embedding: newEmbedding } },
+    );
+
     res.status(200).json({
       success: true,
       message: "Save updated successfully",
@@ -154,11 +166,10 @@ export async function checkSave(req, res) {
 }
 
 export async function getVectorQuerySave(req, res) {
-  console.log("I got hit")
   try {
     const { query } = req.query;
-    console.log("Query recieved")
-    
+    console.log("Query recieved");
+
     if (!query || query.trim() === "") {
       return res
         .status(400)
@@ -211,7 +222,7 @@ export async function getVectorQuerySave(req, res) {
       keywords.length > 0
         ? saveModel
             .find({
-              userId,
+              userId: userObjectId,
               $or: keywords.flatMap((word) => [
                 { title: { $regex: word, $options: "i" } },
                 { topics: { $regex: word, $options: "i" } },
@@ -225,28 +236,21 @@ export async function getVectorQuerySave(req, res) {
         : Promise.resolve([]),
     ]);
 
-    console.log(
-      "Vector results:",
-      vectorResults.length,
-      "Keyword results:",
-      keywordResults.length,
-    );
-
     const seen = new Set();
     const merged = [];
 
-    // Add keyword results first (lower priority)
-    for (const doc of keywordResults) {
-      seen.add(doc._id.toString());
-      merged.push({ ...doc, matchType: "keyword", score: 0 });
-    }
-
-    // Add semantic results (higher priority, sorted by score)
+    // Add semantic results first (higher priority, sorted by score)
     const sortedVectorResults = vectorResults.sort((a, b) => b.score - a.score);
     for (const doc of sortedVectorResults) {
+      seen.add(doc._id.toString());
+      merged.push({ ...doc, matchType: "semantic" });
+    }
+
+    // Backfill with keyword results (lower priority)
+    for (const doc of keywordResults) {
       if (!seen.has(doc._id.toString())) {
         seen.add(doc._id.toString());
-        merged.push({ ...doc, matchType: "semantic" });
+        merged.push({ ...doc, matchType: "keyword", score: 0 });
       }
     }
 

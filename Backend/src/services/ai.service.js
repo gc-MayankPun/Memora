@@ -32,7 +32,7 @@ export async function generateSummaryAndTopics({
     Title: "${title}"
     URL: "${url}"
     Keywords: "${keywords}"
-    Content: "${content}"
+    Content: "${content?.slice(0, 3000)}"
 
     Your task:
     1. Generate a concise summary (max 2 sentences). 
@@ -61,8 +61,9 @@ export async function generateSummaryAndTopics({
 
   try {
     const text = response.content;
-    const cleaned = text.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(cleaned);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("No JSON found");
+    const parsed = JSON.parse(jsonMatch[0]);
     return {
       summary: parsed.summary || "",
       topics: parsed.topics || [],
@@ -110,6 +111,6 @@ export async function generateVectorFromData({
 }) {
   const text =
     `Title: ${title}\nSummary: ${summary}\nTopics: ${topics.join(", ")}\nTags: ${tags.join(", ")}`.trim();
-  const vector = await documentEmbeddingModel.embedQuery(text);
+  const vector = await documentEmbeddingModel.embedDocuments([text]);
   return vector;
 }

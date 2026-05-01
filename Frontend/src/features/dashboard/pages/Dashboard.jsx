@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import FilterBar from "../components/FilterBar";
 import SaveCard from "../components/SaveCard";
 import "../styles/dashboard.scss";
+import DownloadExtension from "../../../app/components/DownloadExtension";
 
 export default function Dashboard() {
   const { handleFetchAllSaves, handleQuerySearch, saves, loading } =
@@ -13,7 +14,7 @@ export default function Dashboard() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (!user) return;
     handleFetchAllSaves();
   }, []);
@@ -76,16 +77,7 @@ export default function Dashboard() {
             </button>
           )}
 
-          {!isSearching && (
-            <a
-              href="https://github.com/gc-MayankPun/Memora/blob/main/extension/README.md"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="dashboard__empty-cta"
-            >
-              Install Extension →
-            </a>
-          )}
+          {!isSearching && <DownloadExtension />}
         </div>
       ) : (
         <div className="dashboard__grid">

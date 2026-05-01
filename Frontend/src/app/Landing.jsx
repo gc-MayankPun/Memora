@@ -21,8 +21,10 @@ import {
   FaHashtag,
   FaQuoteLeft,
   FaProjectDiagram,
+  FaArrowDown,
 } from "react-icons/fa";
 import "./landing.scss";
+import DownloadExtension from "./components/DownloadExtension";
 
 const FAQItem = ({ question, answer }) => {
   const [open, setOpen] = useState(false);
@@ -359,13 +361,9 @@ const GraphMockup = () => (
 
 export default function Landing() {
   const navigate = useNavigate();
-//   const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [activeMockup, setActiveMockup] = useState("dashboard");
 
-//   useEffect(() => {
-//     if (user) navigate("/", { replace: true });
-//   }, [user, navigate]);
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", fn, { passive: true });
@@ -488,7 +486,7 @@ export default function Landing() {
             <em>meaning.</em>
           </h1>
           <p className="lp-hero__sub">
-            Memora captures any webpage, video, or tweet in one click — then
+            Memora captures any webpage, video, or tweet in one click, then
             automatically summarises, tags, and connects your content using AI,
             so you can search by intent, not exact words.
           </p>
@@ -596,8 +594,8 @@ export default function Landing() {
                   Every save runs through Mistral AI via LangChain. You get an
                   auto-generated summary, AI-extracted key topics that power the
                   Knowledge Graph, auto-suggested tags, and a 1024-dimensional
-                  semantic embedding stored in MongoDB Atlas — no external
-                  vector DB needed.
+                  semantic embedding stored in MongoDB Atlas, no external vector
+                  DB needed.
                 </p>
                 <ul className="lp-feature-hero__list">
                   <li>
@@ -635,7 +633,7 @@ export default function Landing() {
                 {
                   icon: <FaLayerGroup />,
                   title: "Collections",
-                  desc: 'Group saves into named collections like "React Resources". Assign from the save detail page — as many as you need.',
+                  desc: 'Group saves into named collections like "React Resources". Assign from the save detail page, as many as you need.',
                 },
                 {
                   icon: <FaCode />,
@@ -645,7 +643,7 @@ export default function Landing() {
                 {
                   icon: <FaShieldAlt />,
                   title: "Query-level security",
-                  desc: "Every DB query is scoped to your userId — not just the route. JWT in HTTP-only cookies with SameSite=None for extension.",
+                  desc: "Every DB query is scoped to your userId, not just the route. JWT in HTTP-only cookies with SameSite=None for extension.",
                 },
               ].map((f, i) => (
                 <div key={i} className="lp-feat-card">
@@ -672,7 +670,7 @@ export default function Landing() {
                 Traditional bookmarking matches words. Memora matches{" "}
                 <em>meaning</em>. Every save is converted to a vector
                 representing its semantic content. Similar meanings cluster
-                together — so "make my app faster" finds your React performance
+                together, so "make my app faster" finds your React performance
                 article without those exact words.
               </p>
               <p className="lp-vector__desc">
@@ -687,12 +685,14 @@ export default function Landing() {
                   <span className="lp-vdemo__phrase">"make my app faster"</span>
                 </div>
                 <div className="lp-vdemo__arrow">
-                  ↓ converted to 1024-dim vector
+                  <FaArrowDown /> converted to 1024-dim vector
                 </div>
                 <div className="lp-vdemo__vec">
                   [0.22, 0.81, 0.11, 0.89, 0.34…]
                 </div>
-                <div className="lp-vdemo__arrow">↓ nearest match in Atlas</div>
+                <div className="lp-vdemo__arrow">
+                  <FaArrowDown /> nearest match in Atlas
+                </div>
                 <div className="lp-vdemo__match">
                   <FaBookmark className="lp-vdemo__match-icon" />
                   <div>
@@ -744,16 +744,7 @@ export default function Landing() {
                   </div>
                 ))}
               </div>
-              <a
-                href="https://github.com/gc-MayankPun/Memora/blob/main/extension/README.md"
-                target="_blank"
-                className="lp-btn lp-btn--download"
-              >
-                <FaDownload /> Read Installation Guide
-                <span className="lp-btn__sub">
-                  zip · load unpacked in chrome://extensions
-                </span>
-              </a>
+              <DownloadExtension />
             </div>
             <div className="lp-download__popup">
               <div className="lp-popup">
