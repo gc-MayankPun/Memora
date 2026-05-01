@@ -24,7 +24,8 @@
   ],
 
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "type": "module"
   },
 
   "content_scripts": [
@@ -34,6 +35,17 @@
       "run_at": "document_idle"
     }
   ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "memora@yourdomain.com",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["websiteActivity", "websiteContent"],
+        "optional": []
+      }
+    }
+  }, 
 
   "icons": {
     "16": "logo.png",

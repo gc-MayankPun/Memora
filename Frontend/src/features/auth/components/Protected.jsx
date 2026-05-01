@@ -5,7 +5,7 @@ const Protected = ({ children }) => {
   const { authLoading, user } = useAuth();
 
   if (authLoading) return null;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/landing" replace />;
 
   return children;
 };

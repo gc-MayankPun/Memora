@@ -34,3 +34,46 @@ body {
   background: var(--border-hover);
   border-radius: 4px;
 }
+
+:root {
+  /* Variables to maintain your design system consistency */
+  --neutral-500: #737373;
+  --neutral-900: #171717;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-landing {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* gap-2 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--neutral-500);
+  transition: color 0.4s var(--ease-smooth); /* transition-colors */
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Hover state for Light Theme */
+.back-landing:hover {
+  color: white
+}
+
+/* Hover state for Dark Theme */
+.dark .back-landing:hover {
+  color: #ffffff;
+}
+
+.back-landing-icon {
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  transition: transform 0.4s var(--ease-smooth); /* transition-transform */
+}
+ 
+.back-landing:hover .back-landing-icon {
+  transform: translateX(-0.25rem); /* -translate-x-1 */
+}
