@@ -809,8 +809,7 @@ export default function Landing() {
               <FaRocket /> Get started free
             </button>
             <a
-              href="/extension.zip"
-              download="memora-extension.zip"
+              href="https://addons.mozilla.org/en-US/firefox/addon/gc-memora/"
               className="lp-btn lp-btn--outline lp-btn--lg"
             >
               <FaDownload /> Download extension

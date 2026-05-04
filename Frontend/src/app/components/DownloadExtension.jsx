@@ -4,7 +4,7 @@ import { FaDownload } from "react-icons/fa";
 const DownloadExtension = () => {
   return (
     <a
-      href="https://github.com/gc-MayankPun/Memora/blob/main/extension/README.md"
+      href="https://addons.mozilla.org/en-US/firefox/addon/gc-memora/"
       target="_blank"
       className="lp-btn lp-btn--download"
     >
