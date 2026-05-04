@@ -381,44 +381,49 @@ export default function Landing() {
 
   const faqs = [
     {
-      question: "How do I install the Chrome extension?",
+      question: "How do I install the Firefox extension?",
       answer:
-        "Download the extension zip, go to chrome://extensions, enable Developer Mode, then drag and drop the zip onto the page. Done in under a minute.",
+        "Head over to the Firefox Add-ons page, click Add to Firefox, and you're done. No zip wrestling, no developer mode, just vibes.",
     },
     {
       question: "What types of content can I save?",
       answer:
-        "Articles, YouTube videos, tweets, GitHub repos, PDFs, Reddit posts, and more. The AI adapts its extraction per type — YouTube gets a transcript-aware summary, GitHub gets a repo description, etc.",
+        "Articles, YouTube videos, tweets, GitHub repos, PDFs, Reddit posts, and more. The AI adapts its extraction per type, YouTube gets a transcript-aware summary, GitHub gets a repo breakdown, etc.",
     },
     {
       question: "How does semantic search work?",
       answer:
-        "On every save, we generate a 1024-dim vector via Mistral Embeddings and store it in MongoDB Atlas. When you search, your query becomes a vector too and we find nearest matches by meaning — not by keywords.",
+        "On every save, we generate a 1024-dim vector via Mistral Embeddings and store it in MongoDB Atlas. When you search, your query becomes a vector too and we find nearest matches by meaning, not just keywords doing their best.",
     },
     {
       question: "What are Key Topics vs Tags?",
       answer:
-        "Key Topics are AI-extracted concepts that appear as nodes in the Knowledge Graph. Tags are user-facing labels (AI-suggested, editable) for filtering on the dashboard.",
+        "Key Topics are AI-extracted concepts that show up as nodes in the Knowledge Graph. Tags are user-facing labels (AI-suggested, fully editable) to help you stay organized without overthinking it.",
     },
     {
       question: "What is the Knowledge Graph?",
       answer:
-        "A D3.js force-directed graph mapping every save and AI topic as nodes. Shared topics create edges so you can visually explore connections across your entire knowledge base.",
+        "A D3.js force-directed graph mapping every save and AI topic as nodes. Shared topics create edges, so you can visually explore how your random 2AM saves are actually connected.",
     },
     {
       question: "How does Memory Resurfacing work?",
       answer:
-        "Memora tracks lastViewedAt per save. It surfaces items saved 7+ days ago that haven't been viewed in 5+ days, shuffled on every visit — shown in the sidebar.",
+        "Memora tracks lastViewedAt per save. It resurfaces items saved 7+ days ago that haven’t been viewed in 5+ days, basically your forgotten genius, making a comeback.",
     },
     {
       question: "Is my data private?",
       answer:
-        "Yes. Every DB query is scoped to your userId at the query level — not just the route. JWT stored in HTTP-only cookies with SameSite=None for extension support.",
+        "Yes. Every DB query is scoped to your userId at the query level, not just the route. JWT is stored in HTTP-only cookies with SameSite=None for extension support. Your data is yours. Period.",
     },
     {
       question: "Does text highlighting work everywhere?",
       answer:
-        "Yes. Select any text on any webpage → a tooltip appears → click Save Highlight → it's stored under that save's detail page.",
+        "Yep. Select any text on any webpage → a tooltip appears → click Save Highlight → it’s stored under that save’s detail page. Feels illegal, but it’s not.",
+    },
+    {
+      question: "How can I use this on Chrome?",
+      answer:
+        "Ah, Chrome… we see you. For now, you can download the extension from GitHub, go to chrome://extensions, enable Developer Mode, and load it manually. It works, just with a tiny bit of ✨effort✨. (Hey, at least it's not Internet Explorer.)",
     },
   ];
 
@@ -491,12 +496,7 @@ export default function Landing() {
             so you can search by intent, not exact words.
           </p>
           <div className="lp-hero__ctas">
-            <button
-              className="lp-btn lp-btn--primary"
-              onClick={() => navigate("/register")}
-            >
-              <FaRocket /> Start saving
-            </button>
+            <DownloadExtension />
             <button
               className="lp-btn lp-btn--ghost"
               onClick={() => scrollTo("how")}
@@ -541,13 +541,13 @@ export default function Landing() {
                 n: "01",
                 icon: <FaDownload />,
                 title: "Install the extension",
-                desc: "Drag the zip into chrome://extensions with Developer Mode on. Works on Chrome, Edge, and Brave.",
+                desc: "Download the extension from the FireFox addons",
               },
               {
                 n: "02",
                 icon: <FaBookmark />,
                 title: "Save anything, one click",
-                desc: "Click the icon on any page — or select text → tooltip → Save Highlight. Articles, videos, repos, tweets.",
+                desc: "Click the icon on any page or select text → tooltip → Save Highlight. Articles, videos, repos, tweets.",
               },
               {
                 n: "03",
@@ -728,7 +728,7 @@ export default function Landing() {
               <h2 className="lp-section__title">One click. From anywhere.</h2>
               <p className="lp-download__desc">
                 The extension turns your entire browser into a capture layer.
-                Works on Chrome, Edge, Brave, and any Chromium browser.
+                Works on FireFox.
               </p>
               <div className="lp-download__feats">
                 {[
